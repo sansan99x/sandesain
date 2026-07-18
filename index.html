@@ -17,10 +17,12 @@
       /* Menghilangkan kotak highlight biru bawaan browser saat tombol di-tap di HP */
       -webkit-tap-highlight-color: transparent; 
     }
+    
     body {
       font-family: 'Quicksand', sans-serif;
       color: #3f3f5c;
-      background: #f4f8fb; /* Diubah sedikit ke cool-white agar menyatu dengan aurora */
+      /* Warna dasar disesuaikan agar lebih menyatu dengan aurora */
+      background: #f0f4f8; 
       overflow-x: hidden;
       position: relative;
     }
@@ -29,9 +31,10 @@
     body::before {
       content: "";
       position: fixed; /* Fixed agar tetap di tempat saat discroll */
-      top: -50%; left: -50%; width: 200%; height: 200%; /* Dibuat 2x lipat lebih besar layar agar bisa diputar */
+      top: -50%; left: -50%; 
+      width: 200%; height: 200%; /* Dibuat 2x lipat lebih besar layar agar bisa diputar */
       z-index: -1;
-      opacity: 0.65; /* Disesuaikan agar warna auroranya jelas tapi teks tetap terbaca */
+      opacity: 0.65; /* Warna auroranya jelas tapi teks tetap terbaca */
       pointer-events: none;
       background:
         radial-gradient(circle at 30% 30%, rgba(124, 165, 255, 0.8) 0%, transparent 50%),
@@ -56,6 +59,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 24px; /* Mencegah logo dan menu bertabrakan */
       padding: 16px 40px;
       background: rgba(255, 255, 255, 0.45);
       backdrop-filter: blur(20px);
@@ -69,7 +73,7 @@
       font-size: 24px;
       color: #7a5c7e;
       letter-spacing: 0.5px;
-      flex-shrink: 0;
+      flex-shrink: 0; /* Mencegah logo mengecil saat menu kepanjangan */
     }
     .sd-nav-links {
       display: flex;
@@ -77,6 +81,7 @@
       list-style: none;
       overflow-x: auto; /* Memungkinkan swipe di HP */
       scrollbar-width: none; /* Hide scrollbar Firefox */
+      -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
     }
     .sd-nav-links::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome/Safari */
     .sd-nav-links a {
@@ -207,8 +212,8 @@
     .sd-carousel-wrap {
       position: relative;
       z-index: 2;
-      margin-top: 14px; /* Dikurangi untuk menyeimbangkan padding yang lebih besar */
-      padding: 40px 0; /* Diperbesar jadi 40px agar kartu bebas terangkat dan membesar tanpa terpotong */
+      margin-top: 14px; 
+      padding: 40px 0; /* Diperbesar agar kartu bebas terangkat tanpa terpotong */
       overflow: hidden;
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
       mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
@@ -218,7 +223,7 @@
       gap: 20px;
       width: max-content;
       animation: sdScroll 35s linear infinite;
-      /* Perintah pause saat di-hover telah DILIHAPUS agar animasi tetap jalan smooth */
+      /* Hover pause dihapus agar tetap smooth jalannya */
     }
     @keyframes sdScroll {
       from { transform: translateX(0); }
@@ -239,11 +244,11 @@
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
     }
     
-    /* Efek saat kursor diarahkan ke kartu */
+    /* Efek saat kursor diarahkan ke kartu carousel */
     .sd-carousel-card:hover {
       transform: translateY(-16px) scale(1.08); /* Kartu naik dan membesar */
-      box-shadow: 0 20px 40px rgba(120,110,160,0.25); /* Bayangan lebih tegas */
-      z-index: 10; /* Memastikan kartu yang dipilih menutupi kartu sebelahnya */
+      box-shadow: 0 20px 40px rgba(120,110,160,0.25);
+      z-index: 10; 
     }
 
     .sd-carousel-card img {
@@ -297,19 +302,15 @@
       font-size: 14px;
       color: #5c5c7a;
       
-      /* Glass effect */
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       
-      /* Shiny border edges */
       border: 1px solid rgba(255, 255, 255, 0.4);
       border-top: 1px solid rgba(255, 255, 255, 0.8);
       border-left: 1px solid rgba(255, 255, 255, 0.8);
       
-      /* Subtle shadow & highlight inset */
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.6);
-      
       padding: 10px 24px;
       border-radius: 999px;
       cursor: pointer;
@@ -324,7 +325,7 @@
     }
     
     .sd-filter-btn.active {
-      background: rgba(185, 138, 194, 0.7); /* Translucent purple */
+      background: rgba(185, 138, 194, 0.7);
       color: #fff;
       border-color: rgba(255, 255, 255, 0.6);
       border-top-color: rgba(255, 255, 255, 0.9);
@@ -334,7 +335,6 @@
     /* GRID AND CARDS */
     .sd-grid {
       display: grid;
-      /* Grid dasar adaptif: akan menyesuaikan ukuran secara otomatis */
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 32px;
     }
@@ -350,10 +350,10 @@
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(120, 110, 160, 0.08);
       
-      /* Update: Animasi lebih ringan dengan scale dan Hardware Acceleration */
+      /* Animasi scroll ringan (Fade In / Fade Out) */
       opacity: 0;
       transform: translateY(30px) scale(0.95);
-      will-change: transform, opacity; /* Bikin animasi 60fps mulus di HP */
+      will-change: transform, opacity;
       transition: transform 0.6s cubic-bezier(0.25, 1, 0.3, 1), opacity 0.6s ease-out, box-shadow 0.3s ease;
     }
 
@@ -370,7 +370,7 @@
     /* 3D IMAGE BOX */
     .sd-card-img-wrap {
       position: relative;
-      padding: 16px 16px 8px; /* Memberi ruang untuk bayangan 3D */
+      padding: 16px 16px 8px;
       overflow: visible; 
     }
 
@@ -386,7 +386,7 @@
     }
 
     .sd-card:hover .sd-image-container {
-      transform: translateY(-6px); /* Mengangkat gambar */
+      transform: translateY(-6px);
       box-shadow:
         0 22px 40px rgba(0,0,0,0.15),
         0 8px 16px rgba(0,0,0,0.12);
@@ -492,16 +492,18 @@
       .sd-grid { gap: 24px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
     }
 
-    /* Media Query: Smartphone */
+    /* Media Query: Smartphone (Solusi untuk Logo dan Menu yang tabrakan) */
     @media (max-width: 600px) {
-      .sd-nav { padding: 14px 16px; }
-      .sd-logo { font-size: 20px; }
-      .sd-nav-links { gap: 18px; }
+      .sd-nav { 
+        padding: 12px 16px; 
+        gap: 16px; /* Memastikan ruang aman antara logo dan link */
+      }
+      .sd-logo { font-size: 18px; } /* Diperkecil sedikit agar porsi scroll menu lebih panjang */
+      .sd-nav-links { gap: 18px; padding-right: 16px; } /* Padding kanan agar item terakhir tidak mentok layar */
       
       .sd-hero { padding: 60px 16px 40px; }
       .sd-eyebrow { font-size: 11px; padding: 6px 14px; margin-bottom: 16px; }
       
-      /* Mengecilkan blob di HP agar tidak meluber */
       .sd-blob-1 { width: 160px; height: 160px; top: -20px; left: -20px; }
       .sd-blob-2 { width: 200px; height: 200px; bottom: -50px; right: -20px; }
       
@@ -510,7 +512,6 @@
       .sd-filters { gap: 8px; }
       .sd-filter-btn { font-size: 12px; padding: 8px 18px; }
       
-      /* Grid HP: Menggunakan min-width 150px memungkinkan 2 kolom kecil di HP besar, atau 1 kolom di HP sempit */
       .sd-grid { gap: 16px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
       
       .sd-card-img-wrap { padding: 12px 12px 4px; }
@@ -519,7 +520,6 @@
       .sd-card-title { font-size: 15px; }
       .sd-card-desc { font-size: 12px; margin-bottom: 14px; }
       
-      /* Tombol aksi jadi bertumpuk / lebih kecil di layar HP kecil */
       .sd-card-buttons { flex-direction: column; gap: 8px; }
       .sd-card-buttons .sd-btn-common { font-size: 12px; padding: 10px; }
     }
@@ -697,13 +697,13 @@
   </footer>
 
   <script>
-  // Menggunakan DOMContentLoaded yang merupakan standar web aman untuk GitHub Pages
+  // Menggunakan DOMContentLoaded standar web untuk GitHub Pages
   document.addEventListener("DOMContentLoaded", function() {
     
     var filterBtns = document.querySelectorAll('.sd-filter-btn');
     var cards = document.querySelectorAll('.sd-card');
 
-    // Fungsi Filter Kategori dengan Logika yang dioptimalkan
+    // Fungsi Filter Kategori
     function applyFilter(category) {
       filterBtns.forEach(function(b) {
         if (b.getAttribute('data-cat') === category) {
@@ -719,7 +719,6 @@
         if (category === 'semua' || cardCat === category) {
           card.style.display = 'block'; 
           requestAnimationFrame(() => {
-            // Murni menggunakan class CSS agar tidak bentrok dengan Observer
             card.classList.add('sd-visible');
           });
         } else {
@@ -748,7 +747,7 @@
       });
     });
 
-    // Update: IntersectionObserver untuk Animasi Dua Arah (Fade In & Fade Out)
+    // IntersectionObserver untuk Animasi Fade-In & Fade-Out dua arah
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
@@ -757,8 +756,7 @@
           var img = entry.target.querySelector('.sd-image-container img');
           if (img) img.style.opacity = '1';
         } else {
-          // Fade OUT saat keluar viewport (bikin scroll lebih interaktif)
-          // Memastikan hanya fade out jika elemen tersebut sedang tidak disembunyikan filter
+          // Fade OUT saat keluar viewport (bikin scroll lebih dinamis)
           if(entry.target.style.display !== 'none') {
             entry.target.classList.remove('sd-visible');
           }
@@ -767,11 +765,6 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
     cards.forEach(function(card) {
-      // Bersihkan sisa inline style agar 100% dikontrol CSS (Lebih ringan)
-      card.style.visibility = '';
-      card.style.opacity = '';
-      card.style.transform = '';
-      
       card.classList.remove('sd-visible'); 
       var img = card.querySelector('.sd-image-container img');
       if (img) {
