@@ -214,20 +214,27 @@
       z-index: 2;
       margin-top: 14px; 
       padding: 40px 0; /* Diperbesar agar kartu bebas terangkat tanpa terpotong */
-      overflow: hidden;
+      overflow-x: auto; /* Diubah jadi auto agar bisa di-swipe manual */
+      overflow-y: hidden;
+      scrollbar-width: none; /* Sembunyikan scrollbar Firefox */
+      -webkit-overflow-scrolling: touch; /* Smooth scroll sangat mulus di iOS/Android */
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
       mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+      cursor: grab; /* Menandakan bisa ditarik pakai mouse di PC */
+      user-select: none; /* Mencegah blok biru seleksi saat ditarik */
+      -webkit-user-select: none;
+    }
+    .sd-carousel-wrap:active {
+      cursor: grabbing; /* Animasi kursor sedang menarik */
+    }
+    .sd-carousel-wrap::-webkit-scrollbar {
+      display: none; /* Sembunyikan scrollbar Chrome/Safari */
     }
     .sd-carousel-track {
       display: flex;
       gap: 20px;
       width: max-content;
-      animation: sdScroll 35s linear infinite;
-      /* Hover pause dihapus agar tetap smooth jalannya */
-    }
-    @keyframes sdScroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
+      /* Animasi CSS (sdScroll) otomatis dihapus, sekarang dikendalikan JavaScript */
     }
     .sd-carousel-card {
       width: 190px;
@@ -256,6 +263,7 @@
       aspect-ratio: 1/1;
       object-fit: cover;
       display: block;
+      -webkit-user-drag: none; /* Mencegah bayangan gambar ikut ditarik oleh browser (ghost drag) */
     }
     .sd-carousel-card p {
       font-size: 14px;
@@ -772,6 +780,69 @@
         img.style.transition = 'opacity 0.8s ease-out 0.2s, transform 0.7s ease'; 
       }
       observer.observe(card);
+    });
+
+    // --- LOGIKA CAROUSEL BISA DI-SWIPE (DRAG) & AUTO-SCROLL ---
+    var carouselWrap = document.querySelector('.sd-carousel-wrap');
+    var carouselTrack = document.querySelector('.sd-carousel-track');
+    
+    var isAutoScrolling = true;
+
+    // Fungsi Auto-Scroll yang mulus
+    function autoScroll() {
+      if (isAutoScrolling && carouselWrap) {
+        carouselWrap.scrollLeft += 1.5; // Kecepatan scroll (bisa dinaik-turunkan)
+      }
+      requestAnimationFrame(autoScroll); // Looping animasi mengikuti frame-rate layar
+    }
+    // Mulai animasi auto-scroll
+    requestAnimationFrame(autoScroll);
+
+    // Infinite loop di-handle oleh event scroll (berlaku untuk auto-scroll & saat di-swipe)
+    carouselWrap.addEventListener('scroll', function() {
+      // Tunggu hingga track selesai dimuat agar ukurannya akurat
+      if(!carouselTrack.scrollWidth) return; 
+
+      var maxScroll = carouselTrack.scrollWidth / 2;
+      
+      // Jika maju melebihi setengah (batas duplikat), kembali ke titik 0 secara kasat mata
+      if (carouselWrap.scrollLeft >= maxScroll) {
+        carouselWrap.scrollLeft -= maxScroll; 
+      } 
+      // Jika digeser mundur secara manual mentok ke 0, pindah ke tengah
+      else if (carouselWrap.scrollLeft <= 0) {
+        carouselWrap.scrollLeft += maxScroll;
+      }
+    });
+
+    
+    // Hapus jeda saat 'mouseenter' agar tidak terhenti hanya karena dilewati kursor
+    // Jeda otomatis HANYA di-trigger saat disentuh di HP atau di-klik di PC
+    carouselWrap.addEventListener('mouseleave', function() { 
+      isDown = false; // Batalkan tarikan drag
+      isAutoScrolling = true; 
+    });
+    
+    carouselWrap.addEventListener('touchstart', function() { isAutoScrolling = false; }, {passive: true});
+    carouselWrap.addEventListener('touchend', function() { isAutoScrolling = true; });
+
+    // Fungsionalitas tambahan: Desktop Mouse Dragging (Bisa ditarik kursor PC)
+    var isDown = false, startX, scrollLeftPos;
+    carouselWrap.addEventListener('mousedown', function(e) {
+      isDown = true;
+      isAutoScrolling = false; // BARU BERHENTI SAAT DIKLIK/DITAHAN
+      startX = e.pageX - carouselWrap.offsetLeft;
+      scrollLeftPos = carouselWrap.scrollLeft;
+    });
+    carouselWrap.addEventListener('mouseup', function() {
+      isDown = false;
+      isAutoScrolling = true; // Lanjut gerak saat klik dilepas
+    });
+    carouselWrap.addEventListener('mousemove', function(e) {
+      if (!isDown) return;
+      e.preventDefault(); // Mencegah blok biru seleksi teks
+      var x = e.pageX - carouselWrap.offsetLeft;
+      carouselWrap.scrollLeft = scrollLeftPos - (x - startX);
     });
 
   });
