@@ -2,12 +2,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+  /* Base Reset & Variables */
   .sd-root * { box-sizing: border-box; margin: 0; padding: 0; }
   .sd-root {
     font-family: 'Quicksand', sans-serif;
     color: #3f3f5c;
     background: #fff8f6;
     overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* ---------- LIQUID BACKGROUND ACCENT ---------- */
+  .sd-root::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.25; /* Light and subtle */
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(253, 226, 228, 0.9) 0%, transparent 60%),
+      radial-gradient(circle at 80% 30%, rgba(205, 218, 253, 0.7) 0%, transparent 50%),
+      radial-gradient(circle at 50% 60%, rgba(208, 244, 222, 0.8) 0%, transparent 60%),
+      radial-gradient(circle at 90% 80%, rgba(255, 209, 220, 0.9) 0%, transparent 50%);
+    background-size: 120% 120%;
+    animation: sdLiquidShift 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes sdLiquidShift {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 10% 100%; }
   }
 
   /* ---------- NAVBAR ---------- */
@@ -19,10 +45,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 28px;
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255,255,255,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.7);
   }
   .sd-logo {
     font-family: 'Fraunces', serif;
@@ -45,36 +71,35 @@
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
-    transition: color 0.25s ease;
+    transition: color 0.3s ease, transform 0.3s ease;
   }
-  .sd-nav-links a:hover { color: #a85c5c; }
+  .sd-nav-links a:hover {
+    color: #a85c5c;
+    transform: translateY(-2px);
+  }
 
   /* ---------- HERO ---------- */
   .sd-hero {
     position: relative;
     padding: 70px 20px 50px;
     text-align: center;
-    background: linear-gradient(135deg, #fde2e4 0%, #cddafd 55%, #d0f4de 100%);
-    background-size: 200% 200%;
-    animation: sdGradientShift 14s ease infinite;
     overflow: hidden;
-  }
-  @keyframes sdGradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    background: transparent;
   }
 
+  /* Floating blobs for hero */
   .sd-blob {
     position: absolute;
     border-radius: 50%;
     filter: blur(40px);
-    opacity: 0.5;
+    opacity: 0.6;
     animation: sdFloat 9s ease-in-out infinite;
+    z-index: 1;
   }
   .sd-blob-1 { width: 220px; height: 220px; background: #ffd1dc; top: -60px; left: -60px; animation-delay: 0s; }
   .sd-blob-2 { width: 260px; height: 260px; background: #c3e8ff; bottom: -80px; right: -60px; animation-delay: 2s; }
   .sd-blob-3 { width: 160px; height: 160px; background: #d4f8d4; top: 40%; left: 45%; animation-delay: 4s; }
+
   @keyframes sdFloat {
     0%, 100% { transform: translateY(0) translateX(0); }
     50% { transform: translateY(-22px) translateX(14px); }
@@ -88,7 +113,7 @@
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: #a85c5c;
-    background: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.7);
     padding: 6px 16px;
     border-radius: 999px;
     margin-bottom: 18px;
@@ -114,29 +139,56 @@
     opacity: 0;
     animation: sdFadeUp 0.8s ease 0.3s forwards;
   }
+
   @keyframes sdFadeUp {
-    from { opacity: 0; transform: translateY(18px); }
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .sd-cta {
+  /* Unified Button Styles & Animation (Button Animation) */
+  .sd-btn-common {
     display: inline-block;
     font-family: 'Quicksand', sans-serif;
     font-weight: 700;
     font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.4s ease, background 0.3s ease;
+  }
+
+  .sd-btn-common:hover {
+    transform: translateY(-4px) scale(1.05);
+  }
+  .sd-btn-common:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .sd-btn-common::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.7), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+  }
+  .sd-btn-common:hover::after { left: 130%; }
+
+  /* Hero CTA button specific */
+  .sd-cta {
+    padding: 14px 34px;
     color: #fff;
     background: #b98ac2;
-    padding: 14px 32px;
-    border-radius: 999px;
-    text-decoration: none;
-    box-shadow: 0 10px 24px rgba(185, 138, 194, 0.35);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 10px 24px rgba(185, 138, 194, 0.4);
     opacity: 0;
     animation: sdFadeUp 0.8s ease 0.45s forwards;
+    position: relative;
+    overflow: hidden;
   }
   .sd-cta:hover {
-    transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 14px 30px rgba(185, 138, 194, 0.45);
+    box-shadow: 0 18px 36px rgba(185, 138, 194, 0.6);
+    background: #a975b3;
   }
 
   /* ---------- CAROUSEL ---------- */
@@ -161,10 +213,10 @@
   }
   .sd-carousel-card {
     width: 180px;
-    background: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.5);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.7);
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 8px 20px rgba(120,110,160,0.15);
@@ -188,6 +240,8 @@
     max-width: 1100px;
     margin: 0 auto;
     padding: 60px 20px 80px;
+    position: relative;
+    z-index: 1;
   }
   .sd-section-head {
     text-align: center;
@@ -196,157 +250,183 @@
   .sd-section-head h2 {
     font-family: 'Fraunces', serif;
     font-weight: 600;
-    font-size: 30px;
+    font-size: 32px;
     color: #3f3f5c;
     margin-bottom: 8px;
   }
   .sd-section-head p {
-    font-size: 14px;
+    font-size: 15px;
     color: #7a7a9a;
   }
 
+  /* Filters */
   .sd-filters {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 36px;
+    margin-bottom: 40px;
   }
   .sd-filter-btn {
     font-family: 'Quicksand', sans-serif;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 14px;
     color: #6b6b8a;
-    background: rgba(255,255,255,0.6);
-    border: 1px solid rgba(150,140,180,0.25);
-    padding: 9px 20px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(150,140,180,0.3);
+    padding: 10px 22px;
     border-radius: 999px;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  .sd-filter-btn:hover { background: rgba(255,255,255,0.9); transform: translateY(-2px); }
+  .sd-filter-btn:hover { background: rgba(255,255,255,0.95); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
   .sd-filter-btn.active {
     background: #b98ac2;
     color: #fff;
     border-color: #b98ac2;
+    box-shadow: 0 6px 16px rgba(185, 138, 194, 0.4);
   }
 
+  /* Grid and Cards */
   .sd-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 22px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
   }
 
   .sd-card {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 24px; /* Lebih rounded */
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(120, 110, 160, 0.12);
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    box-shadow: 0 8px 24px rgba(120, 110, 160, 0.1);
     opacity: 0;
-    transform: translateY(24px);
-  }
-  .sd-card.sd-visible {
-    animation: sdCardIn 0.6s ease forwards;
-  }
-  @keyframes sdCardIn {
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .sd-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 32px rgba(120, 110, 160, 0.22);
+    transform: translateY(40px);
+    /* Transition for entry animation (Scrolling Animation) */
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
   }
 
-  .sd-card-img-wrap { position: relative; overflow: hidden; }
+  .sd-card.sd-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .sd-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(120, 110, 160, 0.2);
+  }
+
+  /* 3D image box (Image Boxes Rounded & 3D, Image Shadow) */
+  .sd-card-img-wrap {
+    position: relative;
+    padding: 16px; /* Memberi ruang untuk bayangan 3D */
+    overflow: visible; /* Membiarkan bayangan keluar dari container padding */
+  }
+
+  .sd-image-container {
+    overflow: hidden;
+    border-radius: 20px; /* Kotak gambar rounded */
+    position: relative;
+    box-shadow:
+      0 12px 24px rgba(0,0,0,0.12), /* Bayangan 3D kedalaman */
+      0 4px 8px rgba(0,0,0,0.08); 
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+  }
+
+  .sd-card:hover .sd-image-container {
+    transform: translateY(-4px); /* Mengangkat gambar seolah-olah 3D saat card dihover */
+    box-shadow:
+      0 24px 48px rgba(0,0,0,0.18),
+      0 8px 16px rgba(0,0,0,0.12);
+  }
+
   .sd-card-img-wrap img {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     display: block;
-    transition: transform 0.5s ease;
+    transition: transform 0.6s ease;
   }
   .sd-card:hover .sd-card-img-wrap img { transform: scale(1.08); }
 
   .sd-card-cat {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 10px;
+    top: 26px;
+    left: 26px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
     color: #a85c5c;
-    background: rgba(255,255,255,0.85);
-    padding: 4px 10px;
+    background: rgba(255,255,255,0.9);
+    padding: 6px 12px;
     border-radius: 999px;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   }
 
-  .sd-card-body { padding: 16px 18px 20px; }
+  /* Card Body & Buttons */
+  .sd-card-body { padding: 8px 20px 24px; }
   .sd-card-title {
     font-family: 'Fraunces', serif;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: #3f3f5c;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
   .sd-card-desc {
     font-size: 13px;
     color: #7a7a9a;
     line-height: 1.6;
-    margin-bottom: 14px;
+    margin-bottom: 20px;
   }
 
-  .sd-card-buttons { display: flex; gap: 8px; }
-  .sd-btn {
-    position: relative;
-    overflow: hidden;
+  .sd-card-buttons { display: flex; gap: 10px; }
+
+  /* Card buttons specific */
+  .sd-card-buttons .sd-btn-common {
     flex: 1;
     text-align: center;
-    text-decoration: none;
     font-size: 12px;
-    font-weight: 700;
-    padding: 10px 8px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.7);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    padding: 12px 8px;
+    border: 1px solid rgba(255,255,255,0.8);
+    position: relative;
+    overflow: hidden;
   }
-  .sd-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 16px rgba(120,110,160,0.2); }
-  .sd-btn::after {
-    content: "";
-    position: absolute;
-    top: 0; left: -75%;
-    width: 50%; height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.7), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.6s ease;
-  }
-  .sd-btn:hover::after { left: 130%; }
-  .sd-btn.etsy { background: rgba(253, 226, 228, 0.8); color: #a85c5c; }
-  .sd-btn.lynk { background: rgba(208, 244, 222, 0.8); color: #3f8f68; }
+
+  .sd-card-buttons .sd-btn-common.etsy { background: rgba(253, 226, 228, 0.9); color: #a85c5c; box-shadow: 0 6px 14px rgba(168, 92, 92, 0.15); }
+  .sd-card-buttons .sd-btn-common.etsy:hover { background: rgba(253, 226, 228, 1); box-shadow: 0 10px 20px rgba(168, 92, 92, 0.25); }
+
+  .sd-card-buttons .sd-btn-common.lynk { background: rgba(208, 244, 222, 0.9); color: #3f8f68; box-shadow: 0 6px 14px rgba(63, 143, 104, 0.15); }
+  .sd-card-buttons .sd-btn-common.lynk:hover { background: rgba(208, 244, 222, 1); box-shadow: 0 10px 20px rgba(63, 143, 104, 0.25); }
 
   /* ---------- FOOTER ---------- */
   .sd-footer {
     text-align: center;
-    padding: 34px 20px 44px;
-    background: rgba(255,255,255,0.5);
-    border-top: 1px solid rgba(150,140,180,0.15);
+    padding: 40px 20px 50px;
+    background: rgba(255,255,255,0.6);
+    border-top: 1px solid rgba(150,140,180,0.2);
+    position: relative;
+    z-index: 1;
   }
   .sd-footer p:first-child {
     font-family: 'Fraunces', serif;
     font-weight: 600;
     font-size: 18px;
     color: #7a5c7e;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
   .sd-footer p:last-child { font-size: 13px; color: #9a9ab5; }
 
+  /* Responsive breakpoints */
   @media (max-width: 600px) {
-    .sd-nav { padding: 12px 16px; }
+    .sd-nav { padding: 14px 20px; }
     .sd-hero { padding: 54px 16px 40px; }
     .sd-catalog { padding: 46px 16px 60px; }
+    .sd-grid { gap: 24px; }
+    .sd-card-img-wrap { padding: 12px; }
   }
 </style>
 
@@ -372,7 +452,7 @@
       <span class="sd-eyebrow">Studio desain digital</span>
       <h1>Desain lucu &amp;<br>lembut untuk harimu</h1>
       <p>Koleksi sticker, template, dan digital art buatan San Desain. Tersedia untuk pembeli lokal maupun internasional.</p>
-      <a class="sd-cta" href="#katalog">Lihat katalog</a>
+      <a class="sd-btn-common sd-cta" href="#katalog">Lihat katalog</a>
     </div>
 
     <div class="sd-carousel-wrap">
@@ -383,7 +463,7 @@
         <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain4/300/300" alt="Produk"><p>Digital Wallpaper</p></div>
         <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain5/300/300" alt="Produk"><p>Journal Template</p></div>
         <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain6/300/300" alt="Produk"><p>Aesthetic Print</p></div>
-        <!-- duplikat untuk loop mulus -->
+        <!-- Duplicates for smooth looping -->
         <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain1/300/300" alt="Produk"><p>Pastel Sticker Pack</p></div>
         <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain2/300/300" alt="Produk"><p>Notion Planner</p></div>
         <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain3/300/300" alt="Produk"><p>Cute Icon Set</p></div>
@@ -397,7 +477,7 @@
   <section class="sd-catalog" id="katalog">
     <div class="sd-section-head">
       <h2>Katalog produk</h2>
-      <p>Klik kategori untuk memfilter, atau klik gambar untuk membeli</p>
+      <p>Klik kategori untuk memfilter, atau klik tombol untuk membeli</p>
     </div>
 
     <div class="sd-filters" id="sdFilters">
@@ -412,90 +492,102 @@
 
       <div class="sd-card" data-cat="sticker">
         <div class="sd-card-img-wrap">
-          <img loading="lazy" src="https://picsum.photos/seed/produk1/500/500" alt="Pastel Sticker Pack">
           <span class="sd-card-cat">Sticker</span>
+          <div class="sd-image-container">
+            <img loading="lazy" src="https://picsum.photos/seed/produk1/500/500" alt="Pastel Sticker Pack">
+          </div>
         </div>
         <div class="sd-card-body">
           <p class="sd-card-title">Pastel sticker pack</p>
           <p class="sd-card-desc">Isi 30 sticker digital tema pastel, format PNG transparan.</p>
           <div class="sd-card-buttons">
-            <a class="sd-btn etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
+            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
+            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
           </div>
         </div>
       </div>
 
       <div class="sd-card" data-cat="template">
         <div class="sd-card-img-wrap">
-          <img loading="lazy" src="https://picsum.photos/seed/produk2/500/500" alt="Notion Planner Template">
           <span class="sd-card-cat">Template</span>
+          <div class="sd-image-container">
+            <img loading="lazy" src="https://picsum.photos/seed/produk2/500/500" alt="Notion Planner Template">
+          </div>
         </div>
         <div class="sd-card-body">
           <p class="sd-card-title">Notion planner template</p>
           <p class="sd-card-desc">Template produktivitas siap pakai untuk Notion, tema soft pastel.</p>
           <div class="sd-card-buttons">
-            <a class="sd-btn etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
+            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
+            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
           </div>
         </div>
       </div>
 
       <div class="sd-card" data-cat="digitalart">
         <div class="sd-card-img-wrap">
-          <img loading="lazy" src="https://picsum.photos/seed/produk3/500/500" alt="Cute Icon Set">
           <span class="sd-card-cat">Digital art</span>
+          <div class="sd-image-container">
+            <img loading="lazy" src="https://picsum.photos/seed/produk3/500/500" alt="Cute Icon Set">
+          </div>
         </div>
         <div class="sd-card-body">
           <p class="sd-card-title">Cute icon set</p>
           <p class="sd-card-desc">50 ikon lucu bergaya flat pastel untuk app atau presentasi.</p>
           <div class="sd-card-buttons">
-            <a class="sd-btn etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
+            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
+            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
           </div>
         </div>
       </div>
 
       <div class="sd-card" data-cat="planner">
         <div class="sd-card-img-wrap">
-          <img loading="lazy" src="https://picsum.photos/seed/produk4/500/500" alt="Journal Planner">
           <span class="sd-card-cat">Planner</span>
+          <div class="sd-image-container">
+            <img loading="lazy" src="https://picsum.photos/seed/produk4/500/500" alt="Journal Planner">
+          </div>
         </div>
         <div class="sd-card-body">
           <p class="sd-card-title">Aesthetic journal planner</p>
           <p class="sd-card-desc">Planner cetak A5 dengan layout mingguan & bulanan.</p>
           <div class="sd-card-buttons">
-            <a class="sd-btn etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
+            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
+            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
           </div>
         </div>
       </div>
 
       <div class="sd-card" data-cat="digitalart">
         <div class="sd-card-img-wrap">
-          <img loading="lazy" src="https://picsum.photos/seed/produk5/500/500" alt="Digital Wallpaper">
           <span class="sd-card-cat">Digital art</span>
+          <div class="sd-image-container">
+            <img loading="lazy" src="https://picsum.photos/seed/produk5/500/500" alt="Digital Wallpaper">
+          </div>
         </div>
         <div class="sd-card-body">
           <p class="sd-card-title">Pastel desktop wallpaper</p>
           <p class="sd-card-desc">Set wallpaper HD untuk desktop & HP, tema warna lembut.</p>
           <div class="sd-card-buttons">
-            <a class="sd-btn etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
+            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
+            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
           </div>
         </div>
       </div>
 
       <div class="sd-card" data-cat="sticker">
         <div class="sd-card-img-wrap">
-          <img loading="lazy" src="https://picsum.photos/seed/produk6/500/500" alt="Washi Tape Digital">
           <span class="sd-card-cat">Sticker</span>
+          <div class="sd-image-container">
+            <img loading="lazy" src="https://picsum.photos/seed/produk6/500/500" alt="Washi Tape Digital">
+          </div>
         </div>
         <div class="sd-card-body">
           <p class="sd-card-title">Digital washi tape set</p>
           <p class="sd-card-desc">15 motif washi tape digital untuk journaling di GoodNotes.</p>
           <div class="sd-card-buttons">
-            <a class="sd-btn etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
+            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
+            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
           </div>
         </div>
       </div>
@@ -512,46 +604,90 @@
 
 <script>
 (function() {
+  // Wait for the DOM content to be loaded within the root container
   var root = document.currentScript.previousElementSibling;
 
-  var filterBtns = document.querySelectorAll('.sd-filter-btn');
-  var cards = document.querySelectorAll('.sd-card');
+  var filterBtns = root.querySelectorAll('.sd-filter-btn');
+  var cards = root.querySelectorAll('.sd-card');
 
+  // Unified Filtering and Linking functionality
+  function applyFilter(category) {
+    // Update active button state
+    filterBtns.forEach(function(b) {
+      if (b.getAttribute('data-cat') === category) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
+
+    // Animate cards on filter change
+    cards.forEach(function(card) {
+      var cardCat = card.getAttribute('data-cat');
+      // Temporarily hide, then show with smooth animation if matched
+      if (category === 'semua' || cardCat === category) {
+        card.style.display = 'block'; // Ensure it's not display none
+        // Give a tiny delay for the grid layout to register, then trigger animation
+        requestAnimationFrame(() => {
+          card.classList.add('sd-visible');
+          card.style.visibility = 'visible';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        });
+      } else {
+        card.classList.remove('sd-visible');
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(40px)';
+        // Wait for animation to finish before applying display none
+        setTimeout(() => {
+          if (!card.classList.contains('sd-visible')) {
+            card.style.visibility = 'hidden';
+            card.style.display = 'none';
+          }
+        }, 400); // match animation duration
+      }
+    });
+  }
+
+  // Filter button clicks
   filterBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
-      filterBtns.forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      var cat = btn.getAttribute('data-cat');
-      cards.forEach(function(card) {
-        if (cat === 'semua' || card.getAttribute('data-cat') === cat) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
+      applyFilter(btn.getAttribute('data-cat'));
     });
   });
 
-  var navLinks = document.querySelectorAll('[data-filter-link]');
+  // Navbar link clicks (smooth scrolling + filtering)
+  var navLinks = root.querySelectorAll('[data-filter-link]');
   navLinks.forEach(function(link) {
     link.addEventListener('click', function(e) {
       e.preventDefault();
-      document.getElementById('katalog').scrollIntoView({ behavior: 'smooth' });
-      var cat = link.getAttribute('data-filter-link');
-      var matchBtn = document.querySelector('.sd-filter-btn[data-cat="' + cat + '"]');
-      if (matchBtn) { matchBtn.click(); }
+      root.querySelector('#katalog').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      applyFilter(link.getAttribute('data-filter-link'));
     });
   });
 
+  // Smooth IntersectionObserver for Catalog entry (Scrolling Animation)
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
         entry.target.classList.add('sd-visible');
+        // Optional: Also animate the inner image to fade in smoothly
+        var img = entry.target.querySelector('.sd-image-container img');
+        if (img) img.style.opacity = '1';
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }); // Trigger when slightly visible
 
-  cards.forEach(function(card) { observer.observe(card); });
+  // Initial setup for cards before observation
+  cards.forEach(function(card) {
+    card.classList.remove('sd-visible'); 
+    var img = card.querySelector('.sd-image-container img');
+    if (img) {
+      img.style.opacity = '0'; // Hide initially for internal fade-in
+      img.style.transition = 'opacity 0.8s ease-out 0.2s, transform 0.6s ease'; // Internal img fade transition
+    }
+    observer.observe(card);
+  });
 })();
 </script>
