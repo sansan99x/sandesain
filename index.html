@@ -343,15 +343,16 @@
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(120, 110, 160, 0.08);
       
-      /* Initial state for Scroll Animation */
+      /* Update: Animasi lebih ringan dengan scale dan Hardware Acceleration */
       opacity: 0;
-      transform: translateY(40px);
-      transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s ease;
+      transform: translateY(30px) scale(0.95);
+      will-change: transform, opacity; /* Bikin animasi 60fps mulus di HP */
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.3, 1), opacity 0.6s ease-out, box-shadow 0.3s ease;
     }
 
     .sd-card.sd-visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
 
     .sd-card:hover {
@@ -695,9 +696,8 @@
     var filterBtns = document.querySelectorAll('.sd-filter-btn');
     var cards = document.querySelectorAll('.sd-card');
 
-    // Fungsi Filter Kategori dengan Animasi Smooth
+    // Fungsi Filter Kategori dengan Logika yang dioptimalkan
     function applyFilter(category) {
-      // Perbarui status tombol aktif
       filterBtns.forEach(function(b) {
         if (b.getAttribute('data-cat') === category) {
           b.classList.add('active');
@@ -706,42 +706,32 @@
         }
       });
 
-      // Animasi pergantian kartu
       cards.forEach(function(card) {
         var cardCat = card.getAttribute('data-cat');
         
         if (category === 'semua' || cardCat === category) {
           card.style.display = 'block'; 
-          // Delay sedikit agar browser merender perubahan 'display' sebelum transisi
           requestAnimationFrame(() => {
+            // Murni menggunakan class CSS agar tidak bentrok dengan Observer
             card.classList.add('sd-visible');
-            card.style.visibility = 'visible';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
           });
         } else {
           card.classList.remove('sd-visible');
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(40px)';
-          // Sembunyikan sepenuhnya setelah animasi selesai
           setTimeout(() => {
             if (!card.classList.contains('sd-visible')) {
-              card.style.visibility = 'hidden';
               card.style.display = 'none';
             }
-          }, 400); 
+          }, 500); 
         }
       });
     }
 
-    // Klik tombol filter
     filterBtns.forEach(function(btn) {
       btn.addEventListener('click', function() {
         applyFilter(btn.getAttribute('data-cat'));
       });
     });
 
-    // Klik link di Navbar (Scroll halus + Filter)
     var navLinks = document.querySelectorAll('[data-filter-link]');
     navLinks.forEach(function(link) {
       link.addEventListener('click', function(e) {
@@ -751,25 +741,34 @@
       });
     });
 
-    // IntersectionObserver untuk Animasi Muncul saat di-scroll
+    // Update: IntersectionObserver untuk Animasi Dua Arah (Fade In & Fade Out)
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
+          // Fade IN saat masuk viewport
           entry.target.classList.add('sd-visible');
           var img = entry.target.querySelector('.sd-image-container img');
           if (img) img.style.opacity = '1';
-          // Unobserve agar animasi tidak berulang jika discroll naik-turun (lebih efisien)
-          observer.unobserve(entry.target);
+        } else {
+          // Fade OUT saat keluar viewport (bikin scroll lebih interaktif)
+          // Memastikan hanya fade out jika elemen tersebut sedang tidak disembunyikan filter
+          if(entry.target.style.display !== 'none') {
+            entry.target.classList.remove('sd-visible');
+          }
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    // Setup awal kartu sebelum diobserve
     cards.forEach(function(card) {
+      // Bersihkan sisa inline style agar 100% dikontrol CSS (Lebih ringan)
+      card.style.visibility = '';
+      card.style.opacity = '';
+      card.style.transform = '';
+      
       card.classList.remove('sd-visible'); 
       var img = card.querySelector('.sd-image-container img');
       if (img) {
-        img.style.opacity = '0'; // Sembunyikan gambar sesaat
+        img.style.opacity = '0'; 
         img.style.transition = 'opacity 0.8s ease-out 0.2s, transform 0.7s ease'; 
       }
       observer.observe(card);
