@@ -847,7 +847,9 @@
     // Fungsi Auto-Scroll yang mulus
     function autoScroll() {
       if (isAutoScrolling && carouselWrap) {
-        carouselWrap.scrollLeft += 1.5; // Kecepatan scroll (bisa dinaik-turunkan)
+        // Cek ukuran layar: jika HP (<=600px) jalan santai 0.5, jika tablet/PC jalan 1.0
+        var speed = window.innerWidth <= 600 ? 0.5 : 1.0; 
+        carouselWrap.scrollLeft += speed; 
       }
       updateCenterCard(); // Deteksi titik tengah di-update 60 kali per detik!
       requestAnimationFrame(autoScroll); // Looping animasi mengikuti frame-rate layar
