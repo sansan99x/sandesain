@@ -1,436 +1,523 @@
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>San Desain | Studio Desain Digital</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-  /* Base Reset & Variables */
-  .sd-root * { box-sizing: border-box; margin: 0; padding: 0; }
-  .sd-root {
-    font-family: 'Quicksand', sans-serif;
-    color: #3f3f5c;
-    background: #fff8f6;
-    overflow-x: hidden;
-    position: relative;
-    min-height: 100vh;
-  }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      color: #3f3f5c;
+      background: #fdfaf9;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-  /* ---------- LIQUID BACKGROUND ACCENT ---------- */
-  .sd-root::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 0;
-    opacity: 0.25; /* Light and subtle */
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 10% 20%, rgba(253, 226, 228, 0.9) 0%, transparent 60%),
-      radial-gradient(circle at 80% 30%, rgba(205, 218, 253, 0.7) 0%, transparent 50%),
-      radial-gradient(circle at 50% 60%, rgba(208, 244, 222, 0.8) 0%, transparent 60%),
-      radial-gradient(circle at 90% 80%, rgba(255, 209, 220, 0.9) 0%, transparent 50%);
-    background-size: 120% 120%;
-    animation: sdLiquidShift 20s ease-in-out infinite alternate;
-  }
+    /* ---------- LIQUID BACKGROUND ACCENT (Lebih Berwarna) ---------- */
+    body::before {
+      content: "";
+      position: fixed; /* Fixed agar tetap di tempat saat discroll */
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      opacity: 0.65; /* Ditingkatkan agar lebih berwarna */
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255, 154, 162, 0.8) 0%, transparent 55%),
+        radial-gradient(circle at 80% 25%, rgba(178, 200, 255, 0.75) 0%, transparent 55%),
+        radial-gradient(circle at 45% 75%, rgba(175, 248, 219, 0.7) 0%, transparent 60%),
+        radial-gradient(circle at 85% 85%, rgba(226, 182, 255, 0.8) 0%, transparent 55%);
+      background-size: 110% 110%;
+      animation: sdLiquidShift 18s ease-in-out infinite alternate;
+    }
 
-  @keyframes sdLiquidShift {
-    0% { background-position: 0% 0%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 10% 100%; }
-  }
+    @keyframes sdLiquidShift {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
 
-  /* ---------- NAVBAR ---------- */
-  .sd-nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 28px;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255,255,255,0.7);
-  }
-  .sd-logo {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 22px;
-    color: #7a5c7e;
-    letter-spacing: 0.5px;
-  }
-  .sd-nav-links {
-    display: flex;
-    gap: 22px;
-    list-style: none;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .sd-nav-links::-webkit-scrollbar { display: none; }
-  .sd-nav-links a {
-    text-decoration: none;
-    color: #6b6b8a;
-    font-size: 14px;
-    font-weight: 600;
-    white-space: nowrap;
-    transition: color 0.3s ease, transform 0.3s ease;
-  }
-  .sd-nav-links a:hover {
-    color: #a85c5c;
-    transform: translateY(-2px);
-  }
+    /* ---------- NAVBAR ---------- */
+    .sd-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+    .sd-logo {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: #7a5c7e;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .sd-nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+      overflow-x: auto; /* Memungkinkan swipe di HP */
+      scrollbar-width: none; /* Hide scrollbar Firefox */
+    }
+    .sd-nav-links::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome/Safari */
+    .sd-nav-links a {
+      text-decoration: none;
+      color: #6b6b8a;
+      font-size: 15px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+    .sd-nav-links a:hover {
+      color: #a85c5c;
+      transform: translateY(-2px);
+    }
 
-  /* ---------- HERO ---------- */
-  .sd-hero {
-    position: relative;
-    padding: 70px 20px 50px;
-    text-align: center;
-    overflow: hidden;
-    background: transparent;
-  }
+    /* ---------- HERO SECTION ---------- */
+    .sd-hero {
+      position: relative;
+      padding: 90px 20px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
 
-  /* Floating blobs for hero */
-  .sd-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.6;
-    animation: sdFloat 9s ease-in-out infinite;
-    z-index: 1;
-  }
-  .sd-blob-1 { width: 220px; height: 220px; background: #ffd1dc; top: -60px; left: -60px; animation-delay: 0s; }
-  .sd-blob-2 { width: 260px; height: 260px; background: #c3e8ff; bottom: -80px; right: -60px; animation-delay: 2s; }
-  .sd-blob-3 { width: 160px; height: 160px; background: #d4f8d4; top: 40%; left: 45%; animation-delay: 4s; }
+    /* Floating blobs for hero depth */
+    .sd-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(45px);
+      opacity: 0.5;
+      animation: sdFloat 10s ease-in-out infinite;
+      z-index: 1;
+    }
+    .sd-blob-1 { width: 240px; height: 240px; background: rgba(255, 209, 220, 0.8); top: -40px; left: -50px; animation-delay: 0s; }
+    .sd-blob-2 { width: 300px; height: 300px; background: rgba(195, 232, 255, 0.8); bottom: -100px; right: -50px; animation-delay: 2s; }
 
-  @keyframes sdFloat {
-    0%, 100% { transform: translateY(0) translateX(0); }
-    50% { transform: translateY(-22px) translateX(14px); }
-  }
+    @keyframes sdFloat {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-25px) translateX(15px); }
+    }
 
-  .sd-hero-content { position: relative; z-index: 2; }
-  .sd-eyebrow {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #a85c5c;
-    background: rgba(255,255,255,0.7);
-    padding: 6px 16px;
-    border-radius: 999px;
-    margin-bottom: 18px;
-    opacity: 0;
-    animation: sdFadeUp 0.8s ease forwards;
-  }
-  .sd-hero h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: clamp(32px, 6vw, 56px);
-    line-height: 1.15;
-    color: #3f3f5c;
-    margin-bottom: 14px;
-    opacity: 0;
-    animation: sdFadeUp 0.8s ease 0.15s forwards;
-  }
-  .sd-hero p {
-    font-size: 16px;
-    color: #5c5c7a;
-    max-width: 480px;
-    margin: 0 auto 28px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: sdFadeUp 0.8s ease 0.3s forwards;
-  }
+    .sd-hero-content { position: relative; z-index: 2; }
+    .sd-eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #a85c5c;
+      background: rgba(255,255,255,0.7);
+      padding: 8px 18px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      opacity: 0;
+      animation: sdFadeUp 0.8s ease forwards;
+    }
+    .sd-hero h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.15;
+      color: #2b2b40;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: sdFadeUp 0.8s ease 0.15s forwards;
+    }
+    .sd-hero p {
+      font-size: 17px;
+      color: #5c5c7a;
+      max-width: 540px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: sdFadeUp 0.8s ease 0.3s forwards;
+    }
 
-  @keyframes sdFadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    @keyframes sdFadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  /* Unified Button Styles & Animation (Button Animation) */
-  .sd-btn-common {
-    display: inline-block;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    text-decoration: none;
-    cursor: pointer;
-    border-radius: 999px;
-    transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.4s ease, background 0.3s ease;
-  }
+    /* Unified Button Styles & Animation */
+    .sd-btn-common {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: transform 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.35s ease, background 0.2s ease, border-color 0.2s ease;
+      position: relative;
+      overflow: hidden; /* For the shine effect */
+    }
 
-  .sd-btn-common:hover {
-    transform: translateY(-4px) scale(1.05);
-  }
-  .sd-btn-common:active {
-    transform: translateY(0) scale(0.98);
-  }
+    .sd-btn-common:hover {
+      transform: translateY(-5px) scale(1.04);
+    }
 
-  .sd-btn-common::after {
-    content: "";
-    position: absolute;
-    top: 0; left: -75%;
-    width: 50%; height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.7), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.6s ease;
-  }
-  .sd-btn-common:hover::after { left: 130%; }
+    .sd-btn-common::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.8), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.6s ease;
+    }
+    .sd-btn-common:hover::after { left: 150%; }
 
-  /* Hero CTA button specific */
-  .sd-cta {
-    padding: 14px 34px;
-    color: #fff;
-    background: #b98ac2;
-    box-shadow: 0 10px 24px rgba(185, 138, 194, 0.4);
-    opacity: 0;
-    animation: sdFadeUp 0.8s ease 0.45s forwards;
-    position: relative;
-    overflow: hidden;
-  }
-  .sd-cta:hover {
-    box-shadow: 0 18px 36px rgba(185, 138, 194, 0.6);
-    background: #a975b3;
-  }
+    /* Hero CTA button specific */
+    .sd-cta {
+      padding: 16px 36px;
+      color: #fff;
+      background: #b98ac2;
+      box-shadow: 0 10px 24px rgba(185, 138, 194, 0.4);
+      opacity: 0;
+      animation: sdFadeUp 0.8s ease 0.45s forwards;
+    }
+    .sd-cta:hover {
+      box-shadow: 0 16px 32px rgba(185, 138, 194, 0.55);
+      background: #a978b3;
+    }
 
-  /* ---------- CAROUSEL ---------- */
-  .sd-carousel-wrap {
-    position: relative;
-    z-index: 2;
-    margin-top: 46px;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  }
-  .sd-carousel-track {
-    display: flex;
-    gap: 18px;
-    width: max-content;
-    animation: sdScroll 26s linear infinite;
-  }
-  .sd-carousel-track:hover { animation-play-state: paused; }
-  @keyframes sdScroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  .sd-carousel-card {
-    width: 180px;
-    background: rgba(255,255,255,0.5);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,0.7);
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(120,110,160,0.15);
-    flex-shrink: 0;
-  }
-  .sd-carousel-card img {
-    width: 100%;
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    display: block;
-  }
-  .sd-carousel-card p {
-    font-size: 13px;
-    font-weight: 600;
-    padding: 10px 12px;
-    color: #3f3f5c;
-  }
+    /* ---------- CAROUSEL ---------- */
+    .sd-carousel-wrap {
+      position: relative;
+      z-index: 2;
+      margin-top: 14px; /* Dikurangi untuk menyeimbangkan padding yang lebih besar */
+      padding: 40px 0; /* Diperbesar jadi 40px agar kartu bebas terangkat dan membesar tanpa terpotong */
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    }
+    .sd-carousel-track {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      animation: sdScroll 35s linear infinite;
+      /* Perintah pause saat di-hover telah DILIHAPUS agar animasi tetap jalan smooth */
+    }
+    @keyframes sdScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .sd-carousel-card {
+      width: 190px;
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.8);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(120,110,160,0.1);
+      flex-shrink: 0;
+      position: relative;
+      /* Transisi membal yang smooth untuk posisi (terangkat) dan ukuran (membesar) */
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    }
+    
+    /* Efek saat kursor diarahkan ke kartu */
+    .sd-carousel-card:hover {
+      transform: translateY(-16px) scale(1.08); /* Kartu naik dan membesar */
+      box-shadow: 0 20px 40px rgba(120,110,160,0.25); /* Bayangan lebih tegas */
+      z-index: 10; /* Memastikan kartu yang dipilih menutupi kartu sebelahnya */
+    }
 
-  /* ---------- CATALOG SECTION ---------- */
-  .sd-catalog {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 60px 20px 80px;
-    position: relative;
-    z-index: 1;
-  }
-  .sd-section-head {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  .sd-section-head h2 {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 32px;
-    color: #3f3f5c;
-    margin-bottom: 8px;
-  }
-  .sd-section-head p {
-    font-size: 15px;
-    color: #7a7a9a;
-  }
+    .sd-carousel-card img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      display: block;
+    }
+    .sd-carousel-card p {
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px;
+      color: #3f3f5c;
+    }
 
-  /* Filters */
-  .sd-filters {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
-  }
-  .sd-filter-btn {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    color: #6b6b8a;
-    background: rgba(255,255,255,0.7);
-    border: 1px solid rgba(150,140,180,0.3);
-    padding: 10px 22px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  }
-  .sd-filter-btn:hover { background: rgba(255,255,255,0.95); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-  .sd-filter-btn.active {
-    background: #b98ac2;
-    color: #fff;
-    border-color: #b98ac2;
-    box-shadow: 0 6px 16px rgba(185, 138, 194, 0.4);
-  }
+    /* ---------- CATALOG SECTION ---------- */
+    .sd-catalog {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 80px 20px 100px;
+      position: relative;
+      z-index: 1;
+    }
+    .sd-section-head {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .sd-section-head h2 {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 34px;
+      color: #2b2b40;
+      margin-bottom: 12px;
+    }
+    .sd-section-head p {
+      font-size: 16px;
+      color: #7a7a9a;
+    }
 
-  /* Grid and Cards */
-  .sd-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 30px;
-  }
+    /* GLASSMORPHISM FILTERS */
+    .sd-filters {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 46px;
+    }
+    .sd-filter-btn {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: #5c5c7a;
+      
+      /* Glass effect */
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      
+      /* Shiny border edges */
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-top: 1px solid rgba(255, 255, 255, 0.8);
+      border-left: 1px solid rgba(255, 255, 255, 0.8);
+      
+      /* Subtle shadow & highlight inset */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+      
+      padding: 10px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .sd-filter-btn:hover { 
+      background: rgba(255, 255, 255, 0.45); 
+      transform: translateY(-3px); 
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+      color: #a85c5c;
+    }
+    
+    .sd-filter-btn.active {
+      background: rgba(185, 138, 194, 0.7); /* Translucent purple */
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.6);
+      border-top-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 20px rgba(185, 138, 194, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+    }
 
-  .sd-card {
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 24px; /* Lebih rounded */
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(120, 110, 160, 0.1);
-    opacity: 0;
-    transform: translateY(40px);
-    /* Transition for entry animation (Scrolling Animation) */
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-  }
+    /* GRID AND CARDS */
+    .sd-grid {
+      display: grid;
+      /* Grid dasar adaptif: akan menyesuaikan ukuran secara otomatis */
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 32px;
+    }
 
-  .sd-card.sd-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    .sd-card {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-bottom-color: rgba(255,255,255,0.3);
+      border-right-color: rgba(255,255,255,0.3);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(120, 110, 160, 0.08);
+      
+      /* Initial state for Scroll Animation */
+      opacity: 0;
+      transform: translateY(40px);
+      transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s ease;
+    }
 
-  .sd-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(120, 110, 160, 0.2);
-  }
+    .sd-card.sd-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-  /* 3D image box (Image Boxes Rounded & 3D, Image Shadow) */
-  .sd-card-img-wrap {
-    position: relative;
-    padding: 16px; /* Memberi ruang untuk bayangan 3D */
-    overflow: visible; /* Membiarkan bayangan keluar dari container padding */
-  }
+    .sd-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(120, 110, 160, 0.15);
+    }
 
-  .sd-image-container {
-    overflow: hidden;
-    border-radius: 20px; /* Kotak gambar rounded */
-    position: relative;
-    box-shadow:
-      0 12px 24px rgba(0,0,0,0.12), /* Bayangan 3D kedalaman */
-      0 4px 8px rgba(0,0,0,0.08); 
-    transition: box-shadow 0.4s ease, transform 0.4s ease;
-  }
+    /* 3D IMAGE BOX */
+    .sd-card-img-wrap {
+      position: relative;
+      padding: 16px 16px 8px; /* Memberi ruang untuk bayangan 3D */
+      overflow: visible; 
+    }
 
-  .sd-card:hover .sd-image-container {
-    transform: translateY(-4px); /* Mengangkat gambar seolah-olah 3D saat card dihover */
-    box-shadow:
-      0 24px 48px rgba(0,0,0,0.18),
-      0 8px 16px rgba(0,0,0,0.12);
-  }
+    .sd-image-container {
+      overflow: hidden;
+      border-radius: 18px; 
+      position: relative;
+      /* 3D Shadow effects */
+      box-shadow:
+        0 14px 28px rgba(0,0,0,0.1),
+        0 4px 10px rgba(0,0,0,0.08); 
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
+    }
 
-  .sd-card-img-wrap img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.6s ease;
-  }
-  .sd-card:hover .sd-card-img-wrap img { transform: scale(1.08); }
+    .sd-card:hover .sd-image-container {
+      transform: translateY(-6px); /* Mengangkat gambar */
+      box-shadow:
+        0 22px 40px rgba(0,0,0,0.15),
+        0 8px 16px rgba(0,0,0,0.12);
+    }
 
-  .sd-card-cat {
-    position: absolute;
-    top: 26px;
-    left: 26px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #a85c5c;
-    background: rgba(255,255,255,0.9);
-    padding: 6px 12px;
-    border-radius: 999px;
-    z-index: 10;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  }
+    .sd-card-img-wrap img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s ease;
+    }
+    .sd-card:hover .sd-card-img-wrap img { transform: scale(1.1); }
 
-  /* Card Body & Buttons */
-  .sd-card-body { padding: 8px 20px 24px; }
-  .sd-card-title {
-    font-family: 'Fraunces', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: #3f3f5c;
-    margin-bottom: 6px;
-  }
-  .sd-card-desc {
-    font-size: 13px;
-    color: #7a7a9a;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
+    .sd-card-cat {
+      position: absolute;
+      top: 26px;
+      left: 26px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #a85c5c;
+      background: rgba(255,255,255,0.95);
+      padding: 6px 12px;
+      border-radius: 999px;
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
 
-  .sd-card-buttons { display: flex; gap: 10px; }
+    /* CARD BODY & BUTTONS */
+    .sd-card-body { padding: 12px 20px 24px; }
+    .sd-card-title {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #2b2b40;
+      margin-bottom: 6px;
+    }
+    .sd-card-desc {
+      font-size: 14px;
+      color: #6b6b8a;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
 
-  /* Card buttons specific */
-  .sd-card-buttons .sd-btn-common {
-    flex: 1;
-    text-align: center;
-    font-size: 12px;
-    padding: 12px 8px;
-    border: 1px solid rgba(255,255,255,0.8);
-    position: relative;
-    overflow: hidden;
-  }
+    .sd-card-buttons { display: flex; gap: 10px; }
 
-  .sd-card-buttons .sd-btn-common.etsy { background: rgba(253, 226, 228, 0.9); color: #a85c5c; box-shadow: 0 6px 14px rgba(168, 92, 92, 0.15); }
-  .sd-card-buttons .sd-btn-common.etsy:hover { background: rgba(253, 226, 228, 1); box-shadow: 0 10px 20px rgba(168, 92, 92, 0.25); }
+    .sd-card-buttons .sd-btn-common {
+      flex: 1;
+      font-size: 13px;
+      padding: 12px 8px;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
 
-  .sd-card-buttons .sd-btn-common.lynk { background: rgba(208, 244, 222, 0.9); color: #3f8f68; box-shadow: 0 6px 14px rgba(63, 143, 104, 0.15); }
-  .sd-card-buttons .sd-btn-common.lynk:hover { background: rgba(208, 244, 222, 1); box-shadow: 0 10px 20px rgba(63, 143, 104, 0.25); }
+    .sd-card-buttons .sd-btn-common.etsy { 
+      background: rgba(253, 226, 228, 0.9); 
+      color: #a85c5c; 
+      box-shadow: 0 4px 12px rgba(168, 92, 92, 0.15); 
+    }
+    .sd-card-buttons .sd-btn-common.etsy:hover { 
+      background: rgba(253, 226, 228, 1); 
+      box-shadow: 0 8px 20px rgba(168, 92, 92, 0.25); 
+    }
 
-  /* ---------- FOOTER ---------- */
-  .sd-footer {
-    text-align: center;
-    padding: 40px 20px 50px;
-    background: rgba(255,255,255,0.6);
-    border-top: 1px solid rgba(150,140,180,0.2);
-    position: relative;
-    z-index: 1;
-  }
-  .sd-footer p:first-child {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 18px;
-    color: #7a5c7e;
-    margin-bottom: 8px;
-  }
-  .sd-footer p:last-child { font-size: 13px; color: #9a9ab5; }
+    .sd-card-buttons .sd-btn-common.lynk { 
+      background: rgba(208, 244, 222, 0.9); 
+      color: #3f8f68; 
+      box-shadow: 0 4px 12px rgba(63, 143, 104, 0.15); 
+    }
+    .sd-card-buttons .sd-btn-common.lynk:hover { 
+      background: rgba(208, 244, 222, 1); 
+      box-shadow: 0 8px 20px rgba(63, 143, 104, 0.25); 
+    }
 
-  /* Responsive breakpoints */
-  @media (max-width: 600px) {
-    .sd-nav { padding: 14px 20px; }
-    .sd-hero { padding: 54px 16px 40px; }
-    .sd-catalog { padding: 46px 16px 60px; }
-    .sd-grid { gap: 24px; }
-    .sd-card-img-wrap { padding: 12px; }
-  }
-</style>
+    /* ---------- FOOTER ---------- */
+    .sd-footer {
+      text-align: center;
+      padding: 40px 20px 50px;
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.6);
+      position: relative;
+      z-index: 1;
+    }
+    .sd-footer p:first-child {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #7a5c7e;
+      margin-bottom: 8px;
+    }
+    .sd-footer p:last-child { font-size: 14px; color: #9a9ab5; }
 
-<div class="sd-root">
+    /* ---------- RESPONSIVE QUERIES ---------- */
+    
+    /* Media Query: Tablet */
+    @media (max-width: 992px) {
+      .sd-nav { padding: 14px 24px; }
+      .sd-hero { padding: 80px 20px 50px; }
+      .sd-catalog { padding: 60px 20px 80px; }
+      .sd-grid { gap: 24px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    }
+
+    /* Media Query: Smartphone */
+    @media (max-width: 600px) {
+      .sd-nav { padding: 14px 16px; }
+      .sd-logo { font-size: 20px; }
+      .sd-nav-links { gap: 18px; }
+      
+      .sd-hero { padding: 60px 16px 40px; }
+      .sd-eyebrow { font-size: 11px; padding: 6px 14px; margin-bottom: 16px; }
+      
+      /* Mengecilkan blob di HP agar tidak meluber */
+      .sd-blob-1 { width: 160px; height: 160px; top: -20px; left: -20px; }
+      .sd-blob-2 { width: 200px; height: 200px; bottom: -50px; right: -20px; }
+      
+      .sd-catalog { padding: 50px 16px 70px; }
+      .sd-section-head h2 { font-size: 28px; }
+      .sd-filters { gap: 8px; }
+      .sd-filter-btn { font-size: 12px; padding: 8px 18px; }
+      
+      /* Grid HP: Menggunakan min-width 150px memungkinkan 2 kolom kecil di HP besar, atau 1 kolom di HP sempit */
+      .sd-grid { gap: 16px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+      
+      .sd-card-img-wrap { padding: 12px 12px 4px; }
+      .sd-card-cat { top: 20px; left: 20px; font-size: 9px; padding: 4px 8px; }
+      .sd-card-body { padding: 10px 14px 18px; }
+      .sd-card-title { font-size: 15px; }
+      .sd-card-desc { font-size: 12px; margin-bottom: 14px; }
+      
+      /* Tombol aksi jadi bertumpuk / lebih kecil di layar HP kecil */
+      .sd-card-buttons { flex-direction: column; gap: 8px; }
+      .sd-card-buttons .sd-btn-common { font-size: 12px; padding: 10px; }
+    }
+  </style>
+</head>
+<body>
 
   <nav class="sd-nav">
     <span class="sd-logo">San Desain</span>
@@ -446,7 +533,6 @@
   <header class="sd-hero">
     <div class="sd-blob sd-blob-1"></div>
     <div class="sd-blob sd-blob-2"></div>
-    <div class="sd-blob sd-blob-3"></div>
 
     <div class="sd-hero-content">
       <span class="sd-eyebrow">Studio desain digital</span>
@@ -480,6 +566,7 @@
       <p>Klik kategori untuk memfilter, atau klik tombol untuk membeli</p>
     </div>
 
+    <!-- Filter Buttons with Glassmorphism -->
     <div class="sd-filters" id="sdFilters">
       <button class="sd-filter-btn active" data-cat="semua">Semua</button>
       <button class="sd-filter-btn" data-cat="sticker">Sticker</button>
@@ -490,6 +577,7 @@
 
     <div class="sd-grid" id="sdGrid">
 
+      <!-- Product Cards -->
       <div class="sd-card" data-cat="sticker">
         <div class="sd-card-img-wrap">
           <span class="sd-card-cat">Sticker</span>
@@ -600,94 +688,94 @@
     <p>&copy; 2026 &mdash; Semua desain dibuat dengan cinta</p>
   </footer>
 
-</div>
+  <script>
+  // Menggunakan DOMContentLoaded yang merupakan standar web aman untuk GitHub Pages
+  document.addEventListener("DOMContentLoaded", function() {
+    
+    var filterBtns = document.querySelectorAll('.sd-filter-btn');
+    var cards = document.querySelectorAll('.sd-card');
 
-<script>
-(function() {
-  // Wait for the DOM content to be loaded within the root container
-  var root = document.currentScript.previousElementSibling;
+    // Fungsi Filter Kategori dengan Animasi Smooth
+    function applyFilter(category) {
+      // Perbarui status tombol aktif
+      filterBtns.forEach(function(b) {
+        if (b.getAttribute('data-cat') === category) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
 
-  var filterBtns = root.querySelectorAll('.sd-filter-btn');
-  var cards = root.querySelectorAll('.sd-card');
-
-  // Unified Filtering and Linking functionality
-  function applyFilter(category) {
-    // Update active button state
-    filterBtns.forEach(function(b) {
-      if (b.getAttribute('data-cat') === category) {
-        b.classList.add('active');
-      } else {
-        b.classList.remove('active');
-      }
-    });
-
-    // Animate cards on filter change
-    cards.forEach(function(card) {
-      var cardCat = card.getAttribute('data-cat');
-      // Temporarily hide, then show with smooth animation if matched
-      if (category === 'semua' || cardCat === category) {
-        card.style.display = 'block'; // Ensure it's not display none
-        // Give a tiny delay for the grid layout to register, then trigger animation
-        requestAnimationFrame(() => {
-          card.classList.add('sd-visible');
-          card.style.visibility = 'visible';
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        });
-      } else {
-        card.classList.remove('sd-visible');
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(40px)';
-        // Wait for animation to finish before applying display none
-        setTimeout(() => {
-          if (!card.classList.contains('sd-visible')) {
-            card.style.visibility = 'hidden';
-            card.style.display = 'none';
-          }
-        }, 400); // match animation duration
-      }
-    });
-  }
-
-  // Filter button clicks
-  filterBtns.forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      applyFilter(btn.getAttribute('data-cat'));
-    });
-  });
-
-  // Navbar link clicks (smooth scrolling + filtering)
-  var navLinks = root.querySelectorAll('[data-filter-link]');
-  navLinks.forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      root.querySelector('#katalog').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      applyFilter(link.getAttribute('data-filter-link'));
-    });
-  });
-
-  // Smooth IntersectionObserver for Catalog entry (Scrolling Animation)
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('sd-visible');
-        // Optional: Also animate the inner image to fade in smoothly
-        var img = entry.target.querySelector('.sd-image-container img');
-        if (img) img.style.opacity = '1';
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }); // Trigger when slightly visible
-
-  // Initial setup for cards before observation
-  cards.forEach(function(card) {
-    card.classList.remove('sd-visible'); 
-    var img = card.querySelector('.sd-image-container img');
-    if (img) {
-      img.style.opacity = '0'; // Hide initially for internal fade-in
-      img.style.transition = 'opacity 0.8s ease-out 0.2s, transform 0.6s ease'; // Internal img fade transition
+      // Animasi pergantian kartu
+      cards.forEach(function(card) {
+        var cardCat = card.getAttribute('data-cat');
+        
+        if (category === 'semua' || cardCat === category) {
+          card.style.display = 'block'; 
+          // Delay sedikit agar browser merender perubahan 'display' sebelum transisi
+          requestAnimationFrame(() => {
+            card.classList.add('sd-visible');
+            card.style.visibility = 'visible';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          });
+        } else {
+          card.classList.remove('sd-visible');
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(40px)';
+          // Sembunyikan sepenuhnya setelah animasi selesai
+          setTimeout(() => {
+            if (!card.classList.contains('sd-visible')) {
+              card.style.visibility = 'hidden';
+              card.style.display = 'none';
+            }
+          }, 400); 
+        }
+      });
     }
-    observer.observe(card);
+
+    // Klik tombol filter
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        applyFilter(btn.getAttribute('data-cat'));
+      });
+    });
+
+    // Klik link di Navbar (Scroll halus + Filter)
+    var navLinks = document.querySelectorAll('[data-filter-link]');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector('#katalog').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        applyFilter(link.getAttribute('data-filter-link'));
+      });
+    });
+
+    // IntersectionObserver untuk Animasi Muncul saat di-scroll
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('sd-visible');
+          var img = entry.target.querySelector('.sd-image-container img');
+          if (img) img.style.opacity = '1';
+          // Unobserve agar animasi tidak berulang jika discroll naik-turun (lebih efisien)
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    // Setup awal kartu sebelum diobserve
+    cards.forEach(function(card) {
+      card.classList.remove('sd-visible'); 
+      var img = card.querySelector('.sd-image-container img');
+      if (img) {
+        img.style.opacity = '0'; // Sembunyikan gambar sesaat
+        img.style.transition = 'opacity 0.8s ease-out 0.2s, transform 0.7s ease'; 
+      }
+      observer.observe(card);
+    });
+
   });
-})();
-</script>
+  </script>
+</body>
+</html>
