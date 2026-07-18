@@ -504,7 +504,17 @@
         opacity: 0.65; /* Agak redup jika posisi tidak di tengah */
         transform: scale(0.92); /* Mengecil jika menjauh dari tengah */
       }
-      .sd-carousel-card.sd-center-focus {
+      
+      /* Mematikan efek hover mouse PC agar tidak nyangkut (sticky hover) sehabis disentuh di Tablet/HP */
+      .sd-carousel-card:hover {
+        transform: scale(0.92);
+        box-shadow: 0 8px 24px rgba(120,110,160,0.1);
+        z-index: 1;
+      }
+
+      /* Hanya kartu yang benar-benar di tengah yang boleh membesar */
+      .sd-carousel-card.sd-center-focus,
+      .sd-carousel-card.sd-center-focus:hover {
         transform: scale(1.08) translateY(-12px); /* Membesar dan naik saat pas di tengah */
         opacity: 1; /* Cahaya kembali terang */
         box-shadow: 0 20px 40px rgba(120,110,160,0.25);
@@ -847,8 +857,8 @@
     // Fungsi Auto-Scroll yang mulus
     function autoScroll() {
       if (isAutoScrolling && carouselWrap) {
-        // Cek ukuran layar: jika HP (<=600px) jalan santai 0.5, jika tablet/PC jalan 1.0
-        var speed = window.innerWidth <= 600 ? 0.5 : 1.0; 
+        // Kecepatan dinaikkan: HP = 1.0 (sedang), PC = 1.5 (sedikit lebih cepat)
+        var speed = window.innerWidth <= 600 ? 1.0 : 1.5; 
         carouselWrap.scrollLeft += speed; 
       }
       updateCenterCard(); // Deteksi titik tengah di-update 60 kali per detik!
