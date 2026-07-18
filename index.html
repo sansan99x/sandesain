@@ -498,6 +498,18 @@
       .sd-hero { padding: 80px 20px 50px; }
       .sd-catalog { padding: 60px 20px 80px; }
       .sd-grid { gap: 24px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      
+      /* Animasi Fokus Tengah di Tablet/HP (Cover Flow Effect) */
+      .sd-carousel-card {
+        opacity: 0.65; /* Agak redup jika posisi tidak di tengah */
+        transform: scale(0.92); /* Mengecil jika menjauh dari tengah */
+      }
+      .sd-carousel-card.sd-center-focus {
+        transform: scale(1.08) translateY(-12px); /* Membesar dan naik saat pas di tengah */
+        opacity: 1; /* Cahaya kembali terang */
+        box-shadow: 0 20px 40px rgba(120,110,160,0.25);
+        z-index: 10;
+      }
     }
 
     /* Media Query: Smartphone (Solusi untuk Logo dan Menu yang tabrakan) */
@@ -788,11 +800,56 @@
     
     var isAutoScrolling = true;
 
+    // Fungsi untuk mencari kartu yang berada persis di tengah layar (Khusus HP/Tablet)
+    function updateCenterCard() {
+      // Hanya jalankan efek fokus ini jika dilayar sempit (Lebar <= 992px)
+      if (window.innerWidth > 992) {
+        var focused = carouselTrack.querySelectorAll('.sd-center-focus');
+        if(focused.length) focused.forEach(function(c) { c.classList.remove('sd-center-focus'); });
+        return;
+      }
+      
+      // Mengukur posisi layar dan mencari titik tengah mutlak
+      var wrapRect = carouselWrap.getBoundingClientRect();
+      var wrapCenter = wrapRect.left + wrapRect.width / 2;
+      var cards = carouselTrack.querySelectorAll('.sd-carousel-card');
+      
+      var closestCard = null;
+      var minDistance = Infinity;
+      
+      // Hitung jarak titik tengah setiap kartu terhadap titik tengah layar
+      var cardData = [];
+      cards.forEach(function(card) {
+        var cardRect = card.getBoundingClientRect();
+        var cardCenter = cardRect.left + cardRect.width / 2;
+        var distance = Math.abs(wrapCenter - cardCenter);
+        cardData.push({card: card, distance: distance});
+      });
+      
+      // Tentukan 1 kartu pemenang (yang jaraknya paling dekat dengan tengah)
+      cardData.forEach(function(data) {
+        if (data.distance < minDistance) {
+          minDistance = data.distance;
+          closestCard = data.card;
+        }
+      });
+      
+      // Tambahkan efek membesar hanya pada kartu pemenang, sisanya mengecil
+      cards.forEach(function(card) {
+        if (card === closestCard) {
+          if (!card.classList.contains('sd-center-focus')) card.classList.add('sd-center-focus');
+        } else {
+          if (card.classList.contains('sd-center-focus')) card.classList.remove('sd-center-focus');
+        }
+      });
+    }
+
     // Fungsi Auto-Scroll yang mulus
     function autoScroll() {
       if (isAutoScrolling && carouselWrap) {
         carouselWrap.scrollLeft += 1.5; // Kecepatan scroll (bisa dinaik-turunkan)
       }
+      updateCenterCard(); // Deteksi titik tengah di-update 60 kali per detik!
       requestAnimationFrame(autoScroll); // Looping animasi mengikuti frame-rate layar
     }
     // Mulai animasi auto-scroll
