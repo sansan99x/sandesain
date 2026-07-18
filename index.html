@@ -10,7 +10,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      /* Menghilangkan kotak highlight biru bawaan browser saat tombol di-tap di HP */
+      -webkit-tap-highlight-color: transparent; 
+    }
     body {
       font-family: 'Quicksand', sans-serif;
       color: #3f3f5c;
