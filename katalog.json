@@ -14,7 +14,8 @@
     "image": "https://picsum.photos/seed/produk2/500/500",
     "category": "template",
     "etsy_url": "#",
-    "lynk_url": "#"
+    "lynk_url": "#",
+    "hidden": true
   },
   {
     "title": "Cute icon set",
