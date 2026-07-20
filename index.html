@@ -665,9 +665,10 @@
         return res.json();
       })
       .then(function(items) {
-        grid.innerHTML = items.map(sdBuildCardHTML).join('');
+        var visibleItems = items.filter(function(item) { return !item.hidden; });
+        grid.innerHTML = visibleItems.map(sdBuildCardHTML).join('');
         // Carousel digandakan 2x biar looping-nya mulus tanpa jeda
-        var carouselHTML = items.map(sdBuildCarouselCardHTML).join('');
+        var carouselHTML = visibleItems.map(sdBuildCarouselCardHTML).join('');
         track.innerHTML = carouselHTML + carouselHTML;
       })
       .catch(function(err) {
