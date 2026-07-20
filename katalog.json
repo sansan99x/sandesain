@@ -5,7 +5,8 @@
     "image": "https://picsum.photos/seed/produk1/500/500",
     "category": "sticker",
     "etsy_url": "#",
-    "lynk_url": "#"
+    "lynk_url": "#",
+    "hidden": true
   },
   {
     "title": "Notion planner template",
