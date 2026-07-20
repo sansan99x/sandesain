@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools Admin - Ambil Data Produk Etsy</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(135deg, #fde2e4 0%, #cddafd 55%, #d0f4de 100%);
+    min-height: 100vh;
+    padding: 40px 16px;
+  }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 12px 30px rgba(120,110,160,0.18);
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: #3f3f5c;
+    margin-bottom: 6px;
+  }
+  .subtitle { font-size: 13px; color: #7a7a9a; margin-bottom: 24px; }
+
+  label { font-size: 13px; font-weight: 600; color: #5c5c7a; display: block; margin-bottom: 6px; }
+  input[type="text"], select, textarea {
+    width: 100%;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(150,140,180,0.3);
+    background: rgba(255,255,255,0.7);
+    margin-bottom: 18px;
+  }
+
+  button {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+    background: #b98ac2;
+    border: none;
+    padding: 13px 26px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(185,138,194,0.35);
+    transition: transform 0.2s ease;
+  }
+  button:hover { transform: translateY(-2px); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .status { font-size: 13px; margin: 14px 0; padding: 10px 14px; border-radius: 10px; display: none; }
+  .status.loading { display: block; background: rgba(200,200,255,0.3); color: #5c5c7a; }
+  .status.error { display: block; background: rgba(253,200,200,0.4); color: #a85c5c; }
+  .status.success { display: block; background: rgba(200,244,220,0.5); color: #3f8f68; }
+
+  .preview {
+    display: none;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(150,140,180,0.2);
+  }
+  .preview.show { display: block; }
+  .preview img {
+    width: 100%;
+    max-width: 220px;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgba(120,110,160,0.2);
+    margin-bottom: 14px;
+  }
+  .preview-title { font-family: 'Fraunces', serif; font-size: 17px; color: #3f3f5c; margin-bottom: 6px; }
+  .preview-desc { font-size: 13px; color: #7a7a9a; margin-bottom: 10px; line-height: 1.6; }
+  .preview-price { font-size: 14px; font-weight: 700; color: #a85c5c; margin-bottom: 16px; }
+
+  .json-box {
+    background: rgba(63,63,92,0.9);
+    color: #d0f4de;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    padding: 16px;
+    border-radius: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-bottom: 10px;
+  }
+  .copy-btn {
+    background: #6b6b8a;
+    font-size: 12px;
+    padding: 8px 18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>Tools Ambil Data Produk Etsy</h1>
+  <p class="subtitle">Paste link produk Etsy, isi kategori, klik ambil data. Hasilnya siap copy ke katalog.json</p>
+
+  <label for="etsyUrl">Link produk Etsy</label>
+  <input type="text" id="etsyUrl" placeholder="https://www.etsy.com/listing/xxxxxxx/nama-produk">
+
+  <label for="category">Kategori</label>
+  <select id="category">
+    <option value="sticker">Sticker</option>
+    <option value="template">Template</option>
+    <option value="digitalart">Digital Art</option>
+    <option value="planner">Planner</option>
+  </select>
+
+  <label for="lynkUrl">Link Lynk.id (untuk pembeli lokal)</label>
+  <input type="text" id="lynkUrl" placeholder="https://lynk.id/username/produk-ini">
+
+  <button id="fetchBtn" onclick="fetchProduct()">Ambil Data dari Etsy</button>
+
+  <div class="status" id="status"></div>
+
+  <div class="preview" id="preview">
+    <img id="prevImg" src="" alt="">
+    <p class="preview-title" id="prevTitle"></p>
+    <p class="preview-desc" id="prevDesc"></p>
+    <p class="preview-price" id="prevPrice"></p>
+
+    <label>JSON siap pakai (copy ini ke katalog.json)</label>
+    <div class="json-box" id="jsonOutput"></div>
+    <button class="copy-btn" onclick="copyJson()">Copy JSON</button>
+  </div>
+</div>
+
+<script>
+  // GANTI dengan URL worker Cloudflare kamu setelah deploy (lihat panduan)
+  const WORKER_URL = "https://etsy-fetcher.sandypurwanto25.workers.dev";
+
+  let currentData = null;
+
+  async function fetchProduct() {
+    const etsyUrl = document.getElementById('etsyUrl').value.trim();
+    const category = document.getElementById('category').value;
+    const lynkUrl = document.getElementById('lynkUrl').value.trim();
+    const statusEl = document.getElementById('status');
+    const btn = document.getElementById('fetchBtn');
+
+    if (!etsyUrl || !etsyUrl.includes('etsy.com')) {
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Masukkan link Etsy yang valid dulu.';
+      return;
+    }
+
+    btn.disabled = true;
+    statusEl.className = 'status loading';
+    statusEl.textContent = 'Mengambil data dari Etsy...';
+    document.getElementById('preview').classList.remove('show');
+
+    try {
+      const res = await fetch(WORKER_URL + '?url=' + encodeURIComponent(etsyUrl));
+      const data = await res.json();
+
+      if (data.error) {
+        statusEl.className = 'status error';
+        statusEl.textContent = data.error;
+        btn.disabled = false;
+        return;
+      }
+
+      currentData = {
+        title: data.title || '(judul tidak ditemukan, isi manual)',
+        description: (data.description || '').slice(0, 160),
+        image: data.image || '',
+        price: data.price ? (data.currency || '') + ' ' + data.price : '(harga tidak ditemukan)',
+        category: category,
+        etsy_url: etsyUrl,
+        lynk_url: lynkUrl || '(isi link Lynk.id manual)'
+      };
+
+      document.getElementById('prevImg').src = currentData.image;
+      document.getElementById('prevTitle').textContent = currentData.title;
+      document.getElementById('prevDesc').textContent = currentData.description;
+      document.getElementById('prevPrice').textContent = currentData.price;
+
+      const jsonBlock = {
+        title: currentData.title,
+        description: currentData.description,
+        image: currentData.image,
+        category: currentData.category,
+        etsy_url: currentData.etsy_url,
+        lynk_url: currentData.lynk_url
+      };
+      document.getElementById('jsonOutput').textContent = JSON.stringify(jsonBlock, null, 2) + ',';
+
+      document.getElementById('preview').classList.add('show');
+      statusEl.className = 'status success';
+      statusEl.textContent = 'Berhasil! Cek preview di bawah, lalu copy JSON-nya.';
+    } catch (err) {
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Gagal mengambil data: ' + err.message;
+    }
+
+    btn.disabled = false;
+  }
+
+  function copyJson() {
+    const text = document.getElementById('jsonOutput').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const statusEl = document.getElementById('status');
+      statusEl.className = 'status success';
+      statusEl.textContent = 'JSON sudah tercopy! Tempel ke katalog.json kamu.';
+    });
+  }
+</script>
+
+</body>
+</html>
