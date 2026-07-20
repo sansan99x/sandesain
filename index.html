@@ -581,19 +581,7 @@
 
     <div class="sd-carousel-wrap">
       <div class="sd-carousel-track" id="sdCarouselTrack">
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain1/300/300" alt="Produk"><p>Pastel Sticker Pack</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain2/300/300" alt="Produk"><p>Notion Planner</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain3/300/300" alt="Produk"><p>Cute Icon Set</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain4/300/300" alt="Produk"><p>Digital Wallpaper</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain5/300/300" alt="Produk"><p>Journal Template</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain6/300/300" alt="Produk"><p>Aesthetic Print</p></div>
-        <!-- Duplicates for smooth looping -->
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain1/300/300" alt="Produk"><p>Pastel Sticker Pack</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain2/300/300" alt="Produk"><p>Notion Planner</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain3/300/300" alt="Produk"><p>Cute Icon Set</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain4/300/300" alt="Produk"><p>Digital Wallpaper</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain5/300/300" alt="Produk"><p>Journal Template</p></div>
-        <div class="sd-carousel-card"><img loading="lazy" src="https://picsum.photos/seed/sandesain6/300/300" alt="Produk"><p>Aesthetic Print</p></div>
+        <!-- Kartu carousel otomatis dimuat dari katalog.json lewat JavaScript di bawah -->
       </div>
     </div>
   </header>
@@ -656,9 +644,21 @@
     );
   }
 
-  // Ambil katalog.json, render semua kartu ke dalam grid, lalu jalankan sisa fitur situs
+  // Bikin 1 kartu carousel (di hero section) dari 1 baris data katalog.json
+  function sdBuildCarouselCardHTML(item) {
+    var safeTitle = (item.title || '').replace(/"/g, '&quot;');
+    return (
+      '<div class="sd-carousel-card">' +
+        '<img loading="lazy" src="' + item.image + '" alt="' + safeTitle + '">' +
+        '<p>' + item.title + '</p>' +
+      '</div>'
+    );
+  }
+
+  // Ambil katalog.json, render semua kartu ke dalam grid + carousel, lalu jalankan sisa fitur situs
   function sdLoadCatalog() {
     var grid = document.getElementById('sdGrid');
+    var track = document.getElementById('sdCarouselTrack');
     return fetch('katalog.json')
       .then(function(res) {
         if (!res.ok) throw new Error('katalog.json tidak ditemukan (status ' + res.status + ')');
@@ -666,6 +666,9 @@
       })
       .then(function(items) {
         grid.innerHTML = items.map(sdBuildCardHTML).join('');
+        // Carousel digandakan 2x biar looping-nya mulus tanpa jeda
+        var carouselHTML = items.map(sdBuildCarouselCardHTML).join('');
+        track.innerHTML = carouselHTML + carouselHTML;
       })
       .catch(function(err) {
         grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#a85c5c;">Gagal memuat katalog: ' + err.message + '</p>';
