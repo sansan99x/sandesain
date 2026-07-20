@@ -614,110 +614,7 @@
     </div>
 
     <div class="sd-grid" id="sdGrid">
-
-      <!-- Product Cards -->
-      <div class="sd-card" data-cat="sticker">
-        <div class="sd-card-img-wrap">
-          <span class="sd-card-cat">Sticker</span>
-          <div class="sd-image-container">
-            <img loading="lazy" src="https://picsum.photos/seed/produk1/500/500" alt="Pastel Sticker Pack">
-          </div>
-        </div>
-        <div class="sd-card-body">
-          <p class="sd-card-title">Pastel sticker pack</p>
-          <p class="sd-card-desc">Isi 30 sticker digital tema pastel, format PNG transparan.</p>
-          <div class="sd-card-buttons">
-            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="sd-card" data-cat="template">
-        <div class="sd-card-img-wrap">
-          <span class="sd-card-cat">Template</span>
-          <div class="sd-image-container">
-            <img loading="lazy" src="https://picsum.photos/seed/produk2/500/500" alt="Notion Planner Template">
-          </div>
-        </div>
-        <div class="sd-card-body">
-          <p class="sd-card-title">Notion planner template</p>
-          <p class="sd-card-desc">Template produktivitas siap pakai untuk Notion, tema soft pastel.</p>
-          <div class="sd-card-buttons">
-            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="sd-card" data-cat="digitalart">
-        <div class="sd-card-img-wrap">
-          <span class="sd-card-cat">Digital art</span>
-          <div class="sd-image-container">
-            <img loading="lazy" src="https://picsum.photos/seed/produk3/500/500" alt="Cute Icon Set">
-          </div>
-        </div>
-        <div class="sd-card-body">
-          <p class="sd-card-title">Cute icon set</p>
-          <p class="sd-card-desc">50 ikon lucu bergaya flat pastel untuk app atau presentasi.</p>
-          <div class="sd-card-buttons">
-            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="sd-card" data-cat="planner">
-        <div class="sd-card-img-wrap">
-          <span class="sd-card-cat">Planner</span>
-          <div class="sd-image-container">
-            <img loading="lazy" src="https://picsum.photos/seed/produk4/500/500" alt="Journal Planner">
-          </div>
-        </div>
-        <div class="sd-card-body">
-          <p class="sd-card-title">Aesthetic journal planner</p>
-          <p class="sd-card-desc">Planner cetak A5 dengan layout mingguan & bulanan.</p>
-          <div class="sd-card-buttons">
-            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="sd-card" data-cat="digitalart">
-        <div class="sd-card-img-wrap">
-          <span class="sd-card-cat">Digital art</span>
-          <div class="sd-image-container">
-            <img loading="lazy" src="https://picsum.photos/seed/produk5/500/500" alt="Digital Wallpaper">
-          </div>
-        </div>
-        <div class="sd-card-body">
-          <p class="sd-card-title">Pastel desktop wallpaper</p>
-          <p class="sd-card-desc">Set wallpaper HD untuk desktop & HP, tema warna lembut.</p>
-          <div class="sd-card-buttons">
-            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="sd-card" data-cat="sticker">
-        <div class="sd-card-img-wrap">
-          <span class="sd-card-cat">Sticker</span>
-          <div class="sd-image-container">
-            <img loading="lazy" src="https://picsum.photos/seed/produk6/500/500" alt="Washi Tape Digital">
-          </div>
-        </div>
-        <div class="sd-card-body">
-          <p class="sd-card-title">Digital washi tape set</p>
-          <p class="sd-card-desc">15 motif washi tape digital untuk journaling di GoodNotes.</p>
-          <div class="sd-card-buttons">
-            <a class="sd-btn-common etsy" href="#" target="_blank" rel="noopener">Etsy</a>
-            <a class="sd-btn-common lynk" href="#" target="_blank" rel="noopener">Lynk.id</a>
-          </div>
-        </div>
-      </div>
-
+      <!-- Kartu produk otomatis dimuat dari katalog.json lewat JavaScript di bawah -->
     </div>
   </section>
 
@@ -727,9 +624,63 @@
   </footer>
 
   <script>
+  // Nama kategori yang ditampilkan di badge kartu (label cantik dari kode kategori)
+  var sdCategoryLabels = {
+    sticker: 'Sticker',
+    template: 'Template',
+    digitalart: 'Digital art',
+    planner: 'Planner'
+  };
+
+  // Bikin 1 kartu produk (HTML) dari 1 baris data katalog.json
+  function sdBuildCardHTML(item) {
+    var catLabel = sdCategoryLabels[item.category] || item.category;
+    var safeTitle = (item.title || '').replace(/"/g, '&quot;');
+    return (
+      '<div class="sd-card" data-cat="' + item.category + '">' +
+        '<div class="sd-card-img-wrap">' +
+          '<span class="sd-card-cat">' + catLabel + '</span>' +
+          '<div class="sd-image-container">' +
+            '<img loading="lazy" src="' + item.image + '" alt="' + safeTitle + '">' +
+          '</div>' +
+        '</div>' +
+        '<div class="sd-card-body">' +
+          '<p class="sd-card-title">' + item.title + '</p>' +
+          '<p class="sd-card-desc">' + item.description + '</p>' +
+          '<div class="sd-card-buttons">' +
+            '<a class="sd-btn-common etsy" href="' + item.etsy_url + '" target="_blank" rel="noopener">Etsy</a>' +
+            '<a class="sd-btn-common lynk" href="' + item.lynk_url + '" target="_blank" rel="noopener">Lynk.id</a>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  // Ambil katalog.json, render semua kartu ke dalam grid, lalu jalankan sisa fitur situs
+  function sdLoadCatalog() {
+    var grid = document.getElementById('sdGrid');
+    return fetch('katalog.json')
+      .then(function(res) {
+        if (!res.ok) throw new Error('katalog.json tidak ditemukan (status ' + res.status + ')');
+        return res.json();
+      })
+      .then(function(items) {
+        grid.innerHTML = items.map(sdBuildCardHTML).join('');
+      })
+      .catch(function(err) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#a85c5c;">Gagal memuat katalog: ' + err.message + '</p>';
+      });
+  }
+
   // Menggunakan DOMContentLoaded standar web untuk GitHub Pages
   document.addEventListener("DOMContentLoaded", function() {
-    
+    sdLoadCatalog().then(sdInitSite);
+  });
+
+  // Semua logika filter, animasi, dan carousel dijalankan lewat fungsi ini,
+  // dipanggil SETELAH kartu produk selesai dimuat dari katalog.json
+  function sdInitSite() {
+
     var filterBtns = document.querySelectorAll('.sd-filter-btn');
     var cards = document.querySelectorAll('.sd-card');
 
@@ -914,7 +865,7 @@
       carouselWrap.scrollLeft = scrollLeftPos - (x - startX);
     });
 
-  });
+  }
   </script>
 </body>
 </html>
