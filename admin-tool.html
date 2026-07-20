@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tools Admin - Ambil Data Produk Etsy</title>
+<title>Dashboard Admin - San Desain</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,209 +11,410 @@
     font-family: 'Quicksand', sans-serif;
     background: linear-gradient(135deg, #fde2e4 0%, #cddafd 55%, #d0f4de 100%);
     min-height: 100vh;
-    padding: 40px 16px;
+    padding: 32px 16px;
   }
-  .wrap {
-    max-width: 640px;
-    margin: 0 auto;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.6);
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 0 12px 30px rgba(120,110,160,0.18);
-  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+
   h1 {
     font-family: 'Fraunces', serif;
-    font-size: 22px;
+    font-size: 24px;
     color: #3f3f5c;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
-  .subtitle { font-size: 13px; color: #7a7a9a; margin-bottom: 24px; }
+  .subtitle { font-size: 13px; color: #7a7a9a; margin-bottom: 20px; }
 
-  label { font-size: 13px; font-weight: 600; color: #5c5c7a; display: block; margin-bottom: 6px; }
-  input[type="text"], select, textarea {
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(150,140,180,0.3);
+    background: rgba(255,255,255,0.6);
+    color: #6b6b8a;
+    cursor: pointer;
+  }
+  .tab-btn.active { background: #b98ac2; color: #fff; border-color: #b98ac2; }
+
+  .panel {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 20px;
+    padding: 24px;
+  }
+
+  label { font-size: 13px; font-weight: 600; color: #5c5c7a; display: block; margin-bottom: 6px; margin-top: 14px; }
+  input[type="text"], input[type="password"] {
     width: 100%;
     font-family: 'Quicksand', sans-serif;
     font-size: 14px;
-    padding: 12px 14px;
-    border-radius: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
     border: 1px solid rgba(150,140,180,0.3);
-    background: rgba(255,255,255,0.7);
-    margin-bottom: 18px;
+    background: rgba(255,255,255,0.8);
   }
 
-  button {
+  button.primary {
     font-family: 'Quicksand', sans-serif;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
     color: #fff;
     background: #b98ac2;
     border: none;
-    padding: 13px 26px;
+    padding: 11px 24px;
     border-radius: 999px;
     cursor: pointer;
-    box-shadow: 0 8px 18px rgba(185,138,194,0.35);
-    transition: transform 0.2s ease;
+    margin-top: 16px;
   }
-  button:hover { transform: translateY(-2px); }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .status { font-size: 13px; margin: 14px 0; padding: 10px 14px; border-radius: 10px; display: none; }
   .status.loading { display: block; background: rgba(200,200,255,0.3); color: #5c5c7a; }
   .status.error { display: block; background: rgba(253,200,200,0.4); color: #a85c5c; }
   .status.success { display: block; background: rgba(200,244,220,0.5); color: #3f8f68; }
 
-  .preview {
-    display: none;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(150,140,180,0.2);
+  .product-list { display: flex; flex-direction: column; gap: 14px; }
+  .product-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    background: rgba(255,255,255,0.6);
+    border-radius: 16px;
+    padding: 12px;
+    transition: opacity 0.3s ease;
   }
-  .preview.show { display: block; }
-  .preview img {
-    width: 100%;
-    max-width: 220px;
-    border-radius: 14px;
-    box-shadow: 0 10px 20px rgba(120,110,160,0.2);
-    margin-bottom: 14px;
-  }
-  .preview-title { font-family: 'Fraunces', serif; font-size: 17px; color: #3f3f5c; margin-bottom: 6px; }
-  .preview-desc { font-size: 13px; color: #7a7a9a; margin-bottom: 10px; line-height: 1.6; }
-  .preview-price { font-size: 14px; font-weight: 700; color: #a85c5c; margin-bottom: 16px; }
+  .product-row.is-hidden { opacity: 0.45; }
 
-  .json-box {
-    background: rgba(63,63,92,0.9);
-    color: #d0f4de;
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    padding: 16px;
-    border-radius: 12px;
-    white-space: pre-wrap;
-    word-break: break-word;
-    margin-bottom: 10px;
+  .product-row img {
+    width: 64px; height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 6px 14px rgba(120,110,160,0.2);
+    flex-shrink: 0;
   }
-  .copy-btn {
-    background: #6b6b8a;
+  .product-info { flex: 1; min-width: 0; }
+  .product-title { font-size: 14px; font-weight: 700; color: #3f3f5c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .product-cat {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #a85c5c;
+    background: rgba(253,226,228,0.7);
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-top: 4px;
+  }
+  .product-badge-hidden {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: #6b6b8a;
+    background: rgba(200,200,220,0.5);
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-top: 4px;
+    margin-left: 6px;
+  }
+
+  .product-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .icon-btn {
+    font-family: 'Quicksand', sans-serif;
     font-size: 12px;
-    padding: 8px 18px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+  }
+  .icon-btn.toggle { background: rgba(200,200,255,0.5); color: #5c5c7a; }
+  .icon-btn.delete { background: rgba(253,200,200,0.6); color: #a85c5c; }
+  .icon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .empty-state { text-align: center; color: #7a7a9a; font-size: 13px; padding: 30px 0; }
+
+  .refresh-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .refresh-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b6b8a;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(150,140,180,0.3);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
   }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <h1>Tools Ambil Data Produk Etsy</h1>
-  <p class="subtitle">Paste link produk Etsy, isi kategori, klik ambil data. Hasilnya siap copy ke katalog.json</p>
+  <h1>Dashboard Admin — San Desain</h1>
+  <p class="subtitle">Kelola semua produk di katalog.json langsung dari sini</p>
 
-  <label for="etsyUrl">Link produk Etsy</label>
-  <input type="text" id="etsyUrl" placeholder="https://www.etsy.com/listing/xxxxxxx/nama-produk">
+  <div class="tabs">
+    <button class="tab-btn active" id="tabCatalog">Katalog</button>
+    <button class="tab-btn" id="tabSettings">Setelan GitHub</button>
+  </div>
 
-  <label for="category">Kategori</label>
-  <select id="category">
-    <option value="sticker">Sticker</option>
-    <option value="template">Template</option>
-    <option value="digitalart">Digital Art</option>
-    <option value="planner">Planner</option>
-  </select>
+  <div class="panel" id="panelCatalog">
+    <div class="refresh-bar">
+      <span style="font-size:13px;color:#7a7a9a;" id="countLabel">Memuat...</span>
+      <button class="refresh-btn" id="refreshBtn">Muat Ulang</button>
+    </div>
+    <div class="status" id="status"></div>
+    <div class="product-list" id="productList"></div>
+  </div>
 
-  <label for="lynkUrl">Link Lynk.id (untuk pembeli lokal)</label>
-  <input type="text" id="lynkUrl" placeholder="https://lynk.id/username/produk-ini">
+  <div class="panel" id="panelSettings" style="display:none;">
+    <label for="ghOwner">Username GitHub kamu</label>
+    <input type="text" id="ghOwner" placeholder="sansan99x">
 
-  <button id="fetchBtn" onclick="fetchProduct()">Ambil Data dari Etsy</button>
+    <label for="ghRepo">Nama repository</label>
+    <input type="text" id="ghRepo" placeholder="sandesain">
 
-  <div class="status" id="status"></div>
+    <label for="ghPath">Nama file katalog</label>
+    <input type="text" id="ghPath" placeholder="katalog.json" value="katalog.json">
 
-  <div class="preview" id="preview">
-    <img id="prevImg" src="" alt="">
-    <p class="preview-title" id="prevTitle"></p>
-    <p class="preview-desc" id="prevDesc"></p>
-    <p class="preview-price" id="prevPrice"></p>
+    <label for="ghBranch">Branch</label>
+    <input type="text" id="ghBranch" placeholder="main" value="main">
 
-    <label>JSON siap pakai (copy ini ke katalog.json)</label>
-    <div class="json-box" id="jsonOutput"></div>
-    <button class="copy-btn" onclick="copyJson()">Copy JSON</button>
+    <label for="ghToken">Personal Access Token</label>
+    <input type="password" id="ghToken" placeholder="github_pat_xxxxxxxxxxxx">
+
+    <button class="primary" id="saveSettingsBtn">Simpan Setelan</button>
+    <div class="status" id="settingsStatus"></div>
   </div>
 </div>
 
 <script>
-  // GANTI dengan URL worker Cloudflare kamu setelah deploy (lihat panduan)
-  const WORKER_URL = "https://etsy-fetcher.sandypurwanto25.workers.dev";
+  var tabCatalog = document.getElementById('tabCatalog');
+  var tabSettings = document.getElementById('tabSettings');
+  var panelCatalog = document.getElementById('panelCatalog');
+  var panelSettings = document.getElementById('panelSettings');
 
-  let currentData = null;
+  tabCatalog.addEventListener('click', function () {
+    tabCatalog.classList.add('active');
+    tabSettings.classList.remove('active');
+    panelCatalog.style.display = 'block';
+    panelSettings.style.display = 'none';
+  });
+  tabSettings.addEventListener('click', function () {
+    tabSettings.classList.add('active');
+    tabCatalog.classList.remove('active');
+    panelSettings.style.display = 'block';
+    panelCatalog.style.display = 'none';
+  });
 
-  async function fetchProduct() {
-    const etsyUrl = document.getElementById('etsyUrl').value.trim();
-    const category = document.getElementById('category').value;
-    const lynkUrl = document.getElementById('lynkUrl').value.trim();
-    const statusEl = document.getElementById('status');
-    const btn = document.getElementById('fetchBtn');
+  // ============================================================
+  // SETELAN - simpan di localStorage (browser ini saja)
+  // ============================================================
+  function loadSettingsForm() {
+    var s = JSON.parse(localStorage.getItem('sdGithubSettings') || '{}');
+    if (s.ghOwner) document.getElementById('ghOwner').value = s.ghOwner;
+    if (s.ghRepo) document.getElementById('ghRepo').value = s.ghRepo;
+    if (s.ghPath) document.getElementById('ghPath').value = s.ghPath;
+    if (s.ghBranch) document.getElementById('ghBranch').value = s.ghBranch;
+    if (s.ghToken) document.getElementById('ghToken').value = s.ghToken;
+  }
+  loadSettingsForm();
 
-    if (!etsyUrl || !etsyUrl.includes('etsy.com')) {
-      statusEl.className = 'status error';
-      statusEl.textContent = 'Masukkan link Etsy yang valid dulu.';
+  document.getElementById('saveSettingsBtn').addEventListener('click', function () {
+    var settings = {
+      ghOwner: document.getElementById('ghOwner').value.trim(),
+      ghRepo: document.getElementById('ghRepo').value.trim(),
+      ghPath: document.getElementById('ghPath').value.trim() || 'katalog.json',
+      ghBranch: document.getElementById('ghBranch').value.trim() || 'main',
+      ghToken: document.getElementById('ghToken').value.trim()
+    };
+    localStorage.setItem('sdGithubSettings', JSON.stringify(settings));
+    var st = document.getElementById('settingsStatus');
+    st.className = 'status success';
+    st.textContent = 'Setelan tersimpan! Buka tab Katalog untuk lihat produk.';
+    loadCatalog();
+  });
+
+  function getSettings() {
+    var s = JSON.parse(localStorage.getItem('sdGithubSettings') || '{}');
+    if (!s.ghOwner || !s.ghRepo || !s.ghToken) {
+      throw new Error('Setelan GitHub belum lengkap. Buka tab "Setelan GitHub" dulu.');
+    }
+    s.ghPath = s.ghPath || 'katalog.json';
+    s.ghBranch = s.ghBranch || 'main';
+    return s;
+  }
+
+  // ============================================================
+  // HELPER base64 unicode-safe
+  // ============================================================
+  function b64EncodeUnicode(str) {
+    var bytes = new TextEncoder().encode(str);
+    var binary = '';
+    bytes.forEach(function (b) { binary += String.fromCharCode(b); });
+    return btoa(binary);
+  }
+  function b64DecodeUnicode(str) {
+    var binary = atob(str.replace(/\n/g, ''));
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
+  function contentsUrl(settings) {
+    return 'https://api.github.com/repos/' + settings.ghOwner + '/' + settings.ghRepo + '/contents/' + settings.ghPath;
+  }
+
+  // Ambil isi katalog.json + sha (nomor versi file) dari GitHub
+  async function fetchCatalog() {
+    var settings = getSettings();
+    var res = await fetch(contentsUrl(settings) + '?ref=' + settings.ghBranch, {
+      headers: {
+        'Authorization': 'Bearer ' + settings.ghToken,
+        'Accept': 'application/vnd.github+json'
+      }
+    });
+    if (!res.ok) throw new Error('Gagal membaca katalog.json (status ' + res.status + ')');
+    var fileData = await res.json();
+    var items = JSON.parse(b64DecodeUnicode(fileData.content));
+    return { items: items, sha: fileData.sha };
+  }
+
+  // Simpan ulang seluruh array katalog ke GitHub (dipakai untuk hide/unhide & hapus)
+  async function saveCatalog(items, sha, commitMessage) {
+    var settings = getSettings();
+    var res = await fetch(contentsUrl(settings), {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + settings.ghToken,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: commitMessage,
+        content: b64EncodeUnicode(JSON.stringify(items, null, 2)),
+        sha: sha,
+        branch: settings.ghBranch
+      })
+    });
+    if (!res.ok) {
+      var errBody = await res.json().catch(function () { return {}; });
+      throw new Error('Gagal menyimpan ke GitHub (status ' + res.status + '): ' + (errBody.message || ''));
+    }
+  }
+
+  // ============================================================
+  // RENDER daftar produk
+  // ============================================================
+  var currentSha = null;
+
+  function renderProductList(items) {
+    var list = document.getElementById('productList');
+    var countLabel = document.getElementById('countLabel');
+
+    if (!items.length) {
+      list.innerHTML = '<p class="empty-state">Belum ada produk di katalog.</p>';
+      countLabel.textContent = '0 produk';
       return;
     }
 
-    btn.disabled = true;
-    statusEl.className = 'status loading';
-    statusEl.textContent = 'Mengambil data dari Etsy...';
-    document.getElementById('preview').classList.remove('show');
+    countLabel.textContent = items.length + ' produk';
 
-    try {
-      const res = await fetch(WORKER_URL + '?url=' + encodeURIComponent(etsyUrl));
-      const data = await res.json();
-
-      if (data.error) {
-        statusEl.className = 'status error';
-        statusEl.textContent = data.error;
-        btn.disabled = false;
-        return;
-      }
-
-      currentData = {
-        title: data.title || '(judul tidak ditemukan, isi manual)',
-        description: (data.description || '').slice(0, 160),
-        image: data.image || '',
-        price: data.price ? (data.currency || '') + ' ' + data.price : '(harga tidak ditemukan)',
-        category: category,
-        etsy_url: etsyUrl,
-        lynk_url: lynkUrl || '(isi link Lynk.id manual)'
-      };
-
-      document.getElementById('prevImg').src = currentData.image;
-      document.getElementById('prevTitle').textContent = currentData.title;
-      document.getElementById('prevDesc').textContent = currentData.description;
-      document.getElementById('prevPrice').textContent = currentData.price;
-
-      const jsonBlock = {
-        title: currentData.title,
-        description: currentData.description,
-        image: currentData.image,
-        category: currentData.category,
-        etsy_url: currentData.etsy_url,
-        lynk_url: currentData.lynk_url
-      };
-      document.getElementById('jsonOutput').textContent = JSON.stringify(jsonBlock, null, 2) + ',';
-
-      document.getElementById('preview').classList.add('show');
-      statusEl.className = 'status success';
-      statusEl.textContent = 'Berhasil! Cek preview di bawah, lalu copy JSON-nya.';
-    } catch (err) {
-      statusEl.className = 'status error';
-      statusEl.textContent = 'Gagal mengambil data: ' + err.message;
-    }
-
-    btn.disabled = false;
+    list.innerHTML = items.map(function (item, index) {
+      var isHidden = !!item.hidden;
+      var safeTitle = (item.title || '(tanpa judul)').replace(/</g, '&lt;');
+      return (
+        '<div class="product-row' + (isHidden ? ' is-hidden' : '') + '">' +
+          '<img src="' + item.image + '" alt="' + safeTitle + '">' +
+          '<div class="product-info">' +
+            '<div class="product-title">' + safeTitle + '</div>' +
+            '<span class="product-cat">' + (item.category || '-') + '</span>' +
+            (isHidden ? '<span class="product-badge-hidden">Disembunyikan</span>' : '') +
+          '</div>' +
+          '<div class="product-actions">' +
+            '<button class="icon-btn toggle" data-action="toggle" data-index="' + index + '">' + (isHidden ? 'Tampilkan' : 'Sembunyikan') + '</button>' +
+            '<button class="icon-btn delete" data-action="delete" data-index="' + index + '">Hapus</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
   }
 
-  function copyJson() {
-    const text = document.getElementById('jsonOutput').textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      const statusEl = document.getElementById('status');
+  var catalogItems = [];
+
+  async function loadCatalog() {
+    var statusEl = document.getElementById('status');
+    try {
+      statusEl.className = 'status loading';
+      statusEl.textContent = 'Memuat katalog dari GitHub...';
+      var result = await fetchCatalog();
+      catalogItems = result.items;
+      currentSha = result.sha;
+      renderProductList(catalogItems);
+      statusEl.className = '';
+      statusEl.textContent = '';
+      statusEl.style.display = 'none';
+    } catch (err) {
+      statusEl.className = 'status error';
+      statusEl.textContent = err.message;
+      document.getElementById('countLabel').textContent = '';
+    }
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', loadCatalog);
+
+  // Klik tombol Sembunyikan/Tampilkan atau Hapus
+  document.getElementById('productList').addEventListener('click', async function (e) {
+    var btn = e.target.closest('.icon-btn');
+    if (!btn) return;
+
+    var index = parseInt(btn.getAttribute('data-index'), 10);
+    var action = btn.getAttribute('data-action');
+    var statusEl = document.getElementById('status');
+    statusEl.style.display = 'block';
+
+    var allBtns = document.querySelectorAll('.icon-btn');
+    allBtns.forEach(function (b) { b.disabled = true; });
+
+    try {
+      if (action === 'toggle') {
+        catalogItems[index].hidden = !catalogItems[index].hidden;
+        statusEl.className = 'status loading';
+        statusEl.textContent = 'Menyimpan perubahan...';
+        await saveCatalog(catalogItems, currentSha, (catalogItems[index].hidden ? 'Sembunyikan' : 'Tampilkan') + ' produk: ' + catalogItems[index].title);
+      } else if (action === 'delete') {
+        var confirmDelete = confirm('Yakin mau hapus produk "' + catalogItems[index].title + '"? Ini tidak bisa dibatalkan.');
+        if (!confirmDelete) {
+          allBtns.forEach(function (b) { b.disabled = false; });
+          return;
+        }
+        var removedTitle = catalogItems[index].title;
+        catalogItems.splice(index, 1);
+        statusEl.className = 'status loading';
+        statusEl.textContent = 'Menghapus produk...';
+        await saveCatalog(catalogItems, currentSha, 'Hapus produk: ' + removedTitle);
+      }
+
+      // Reload biar sha & data selalu sinkron dengan GitHub
+      await loadCatalog();
       statusEl.className = 'status success';
-      statusEl.textContent = 'JSON sudah tercopy! Tempel ke katalog.json kamu.';
-    });
+      statusEl.textContent = 'Berhasil disimpan!';
+    } catch (err) {
+      statusEl.className = 'status error';
+      statusEl.textContent = err.message;
+      allBtns.forEach(function (b) { b.disabled = false; });
+    }
+  });
+
+  // Muat otomatis saat halaman dibuka, kalau setelan sudah ada
+  try {
+    getSettings();
+    loadCatalog();
+  } catch (e) {
+    document.getElementById('status').className = 'status error';
+    document.getElementById('status').textContent = e.message;
+    document.getElementById('status').style.display = 'block';
   }
 </script>
 
